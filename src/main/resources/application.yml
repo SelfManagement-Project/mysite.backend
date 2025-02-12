@@ -1,0 +1,63 @@
+server:
+  port: 9000
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: mysite
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: manager
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  session:
+    jdbc:
+      initialize-schema: always
+  
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+  
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: lukdown10@gmail.com
+    password: huaf ebds phqp xhbv
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+mybatis:
+  type-aliases-package: com.mysite.web.login.dto, com.mysite.web.login.model
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+
+file:
+  upload:
+    windows: C:\Users\hi02\dev\upload\
+    linux: /app/upload/
+
+logging:
+  level:
+    com.learningman.nagnae.authorization.repository.UserRepository: TRACE
+    com.learningman.nagnae.board.repository.BoardMapper: TRACE
+    com.learningman.nagnae.chatbot.repository.ChatHistoryRepository: TRACE
+    com.learningman.nagnae.study.repository.StudyMapper: TRACE

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mysite.web.login.mapper.LoginMapper">
+    <select id="findByEmail" parameterType="String" resultType="com.mysite.web.login.model.UserEntity">
+        SELECT
+            user_id as userId,
+            user_email as userEmail,
+            user_pw as userPw,
+            user_name as userName,
+            created_at as createdAt,
+            updated_at as updatedAt,
+            last_login as lastLogin,
+            is_active as isActive,
+            role
+        FROM "user"
+        WHERE user_email = #{email}
+    </select>
+</mapper>
