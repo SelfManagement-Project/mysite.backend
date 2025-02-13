@@ -11,6 +11,7 @@ import com.mysite.web.login.service.LoginService;
 import com.mysite.web.login.util.JsonResult;
 import com.mysite.web.login.dto.LoginRequestDTO;
 import com.mysite.web.login.dto.LoginResponseDTO;
+import com.mysite.web.login.dto.SignUpRequestDTO;
 import com.mysite.web.login.model.UserEntity;
 
 @RestController
@@ -18,13 +19,25 @@ import com.mysite.web.login.model.UserEntity;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final LoginService loginService;
+	private final LoginService loginService;
 
-    @PostMapping("/login")
-    public ResponseEntity<JsonResult> login(@RequestBody LoginRequestDTO loginRequest) {
+	// 로그인
+	@PostMapping("/login")
+	public ResponseEntity<JsonResult> login(@RequestBody LoginRequestDTO loginRequest) {
 //    	System.out.println("login test::" + loginRequest);
-    	LoginResponseDTO auth = loginService.login(loginRequest);
-    	
-        return ResponseEntity.ok(JsonResult.success(auth));
-    }
+		LoginResponseDTO auth = loginService.login(loginRequest);
+
+		return ResponseEntity.ok(JsonResult.success(auth));
+	}
+
+	// 회원가입
+	@PostMapping("/signup")
+	public ResponseEntity<JsonResult> signup(@RequestBody SignUpRequestDTO signUpRequestDTO) {
+		System.out.println("회원가입");
+		System.out.println(signUpRequestDTO);
+		loginService.exeSignUp(signUpRequestDTO);
+
+		return ResponseEntity.ok(JsonResult.success("회원가입 성공"));
+	}
+
 }
