@@ -9,4 +9,5 @@ import com.mysite.web.login.model.UserEntity;
 public interface LoginMapper {
     UserEntity findByEmail(String email);
     int exeSignUp(SignUpRequestDTO request);
+    void exeUpdateLastLogin(String email);
 }

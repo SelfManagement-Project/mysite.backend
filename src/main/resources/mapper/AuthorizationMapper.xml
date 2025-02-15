@@ -2,39 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mysite.web.login.mapper.LoginMapper">
 
-   <select id="findByEmail" parameterType="String" resultType="com.mysite.web.login.model.UserEntity">
-       SELECT
-           user_id as userId,
-           user_email as userEmail,
-           user_pw as userPw,
-           user_name as userName,
-           created_at as createdAt,
-           updated_at as updatedAt,
-           last_login as lastLogin,  
-           is_active as isActive,
-           role
-       FROM "user"
-       WHERE user_email = #{email}
-   </select>
+	<!-- 로그인 -->
+	<select id="findByEmail" parameterType="String"
+		resultType="com.mysite.web.login.model.UserEntity">
+		SELECT
+		user_id as userId,
+		user_email as userEmail,
+		user_pw as userPw,
+		user_name as userName,
+		created_at as createdAt,
+		updated_at as updatedAt,
+		last_login as lastLogin,
+		is_active as isActive,
+		role
+		FROM "user"
+		WHERE user_email = #{email}
+	</select>
 
-   <insert id="exeSignUp" parameterType="com.mysite.web.login.dto.SignUpRequestDTO">
-       INSERT INTO "user" (
-           user_email,
-           user_pw,
-           user_name,
-           created_at,
-           updated_at,
-           is_active,
-           role
-       ) VALUES (
-           #{email},
-           #{password},
-           #{name},
-           CURRENT_TIMESTAMP,
-           CURRENT_TIMESTAMP,
-           true,
-           'USER'
-       )
-   </insert>
+	<!-- 로그인 시간 업데이트 -->
+	<update id="exeUpdateLastLogin" parameterType="String">
+		UPDATE "user"
+		SET last_login = CURRENT_TIMESTAMP
+		WHERE user_email = #{email}
+	</update>
+
+
+	<insert id="exeSignUp"
+		parameterType="com.mysite.web.login.dto.SignUpRequestDTO">
+		INSERT INTO "user" (
+		user_email,
+		user_pw,
+		user_name,
+		created_at,
+		updated_at,
+		is_active,
+		role
+		) VALUES (
+		#{email},
+		#{password},
+		#{name},
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP,
+		true,
+		'USER'
+		)
+	</insert>
 
 </mapper>

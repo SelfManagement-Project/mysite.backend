@@ -28,15 +28,15 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	// 로그인
 	@Override
 	public LoginResponseDTO login(LoginRequestDTO request) {
 		UserEntity user = loginMapper.findByEmail(request.getEmail());
-		System.out.println();
-		System.out.println("USER:::::" + user);
+//		System.out.println("USER:::::" + user);
 		if (user == null || !passwordEncoder.matches(request.getPassword(), user.getUserPw())) {
 			throw new RuntimeException("Invalid email or password");
 		}
-
+		loginMapper.exeUpdateLastLogin(request.getEmail());
 		return LoginResponseDTO.builder().userId(user.getUserId()).email(user.getUserEmail())
 				.username(user.getUserName()).build();
 	}
