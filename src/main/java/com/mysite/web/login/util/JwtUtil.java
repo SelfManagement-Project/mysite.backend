@@ -17,23 +17,35 @@ public class JwtUtil {
     private static final String SECRET_KEY = "1234"; // 비밀키, 실제 환경에서는 보다 복잡하고 안전한 키 사용 권장
     private static final long EXPIRE_TIME = 1000 * 60 * 60; // 토큰 유효 시간(여기서는 1시간으로 설정)
 
-    public static void createTokenAndSetHeader(HttpServletResponse response, String tokenSubject) {
-        String token = createToken(tokenSubject);
+    public static void createTokenAndSetHeader(HttpServletResponse response, String email, Long userId, String userName) {
+        String token = createToken(email, userId, userName);
         log.info("Created token: {}", token);
         addResponseHeaderToken(response, token);
     }
 
-    public static String createToken(String tokenSubject) {
+    public static String createToken(String email, Long userId, String userName) {
         return JWT.create()
-                  .withSubject(tokenSubject)
-                  .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME))
-                  .sign(Algorithm.HMAC512(SECRET_KEY));
+                .withSubject(email)
+                .withClaim("userId", userId)
+                .withClaim("userName", userName)
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME))
+                .sign(Algorithm.HMAC512(SECRET_KEY));
     }
 
     private static void addResponseHeaderToken(HttpServletResponse response, String token) {
         response.addHeader("Authorization", "Bearer " + token);
     }
 
+    public static Long getUserIdFromToken(String token) {
+        try {
+            DecodedJWT decodedJWT = JWT.decode(token);
+            return decodedJWT.getClaim("userId").asLong();
+        } catch (JWTVerificationException exception) {
+            log.error("토큰에서 userId 추출 실패", exception);
+            return null;
+        }
+    }
+    
     public static int getNoFromHeader(HttpServletRequest request) {
         String token = getTokenByHeader(request);
 

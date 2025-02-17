@@ -1,4 +1,4 @@
-package com.mysite.web.login.util;
+package com.mysite.web.common.util;
 
 import lombok.Getter;
 import lombok.AccessLevel;

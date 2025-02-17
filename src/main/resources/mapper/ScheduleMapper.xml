@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mysite.web.schedule.mapper.ScheduleMapper">
+    <select id="getScheduleByToken" parameterType="String" resultType="com.mysite.web.schedule.dto.ScheduleResponseDTO">
+        SELECT 
+            s.schedule_id as scheduleId,
+            s.user_id as userId,
+            u.user_email as email,
+            u.user_name as userName,
+            s.title as title,
+            s.date as date,
+            s.start_time as start,
+            s.end_time as end,
+            s.type as type,
+            s.is_completed as isCompleted,
+            <!-- s.description as description,
+            s.status as status, -->
+            s.created_at as createdAt,
+            s.updated_at as updatedAt
+        FROM 
+            schedule s
+            JOIN "user" u ON s.user_id = u.user_id
+        WHERE 
+            u.user_email = #{userEmail}
+        ORDER BY 
+            s.start_time ASC
+    </select>
+</mapper>

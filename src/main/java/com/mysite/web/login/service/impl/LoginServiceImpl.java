@@ -15,6 +15,7 @@ import com.mysite.web.login.dto.LoginResponseDTO;
 import com.mysite.web.login.dto.SignUpRequestDTO;
 import com.mysite.web.login.dto.SignUpResponseDTO;
 import com.mysite.web.login.service.LoginService;
+import com.mysite.web.login.util.JwtUtil;
 import com.mysite.web.login.model.UserEntity;
 
 @Slf4j
@@ -31,14 +32,27 @@ public class LoginServiceImpl implements LoginService {
 	// 로그인
 	@Override
 	public LoginResponseDTO login(LoginRequestDTO request) {
-		UserEntity user = loginMapper.findByEmail(request.getEmail());
-//		System.out.println("USER:::::" + user);
-		if (user == null || !passwordEncoder.matches(request.getPassword(), user.getUserPw())) {
-			throw new RuntimeException("Invalid email or password");
-		}
-		loginMapper.exeUpdateLastLogin(request.getEmail());
-		return LoginResponseDTO.builder().userId(user.getUserId()).email(user.getUserEmail())
-				.username(user.getUserName()).build();
+	    UserEntity user = loginMapper.findByEmail(request.getEmail());
+
+	    if (user == null || !passwordEncoder.matches(request.getPassword(), user.getUserPw())) {
+	        throw new RuntimeException("Invalid email or password");
+	    }
+
+	    loginMapper.exeUpdateLastLogin(request.getEmail());
+
+	    // JWT 토큰 생성
+	    String token = JwtUtil.createToken(
+	        user.getUserEmail(), 
+	        user.getUserId(), 
+	        user.getUserName()
+	    );
+
+	    return LoginResponseDTO.builder()
+	            .userId(user.getUserId())
+	            .email(user.getUserEmail())
+	            .username(user.getUserName())
+	            .token(token)
+	            .build();
 	}
 
 	// 회원가입
