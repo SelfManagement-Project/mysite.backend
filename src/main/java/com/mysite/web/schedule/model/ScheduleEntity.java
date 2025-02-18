@@ -14,12 +14,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ScheduleEntity {
-	private String scheduleId;
-    private UserEntity user;
-    private String scheduleTitle;
-    private String scheduleStart;
-    private String scheduleEnd;
-    private boolean allDay;
+	private Long scheduleId;      // 일정 ID
+    private Long userId;          // 일정 생성자 ID
+    private String email;      // 일정 생성자 이름
+    private String userName;      // 일정 생성자 이름
+    private String title;
+    private String date;
+    private String start;
+    private String end;
+    private String type;
+    private boolean isCompleted;
     private String description;
     private String status;
     private String createdAt;
