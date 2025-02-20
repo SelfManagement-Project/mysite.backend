@@ -291,7 +291,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 			List<HabitProgressDTO> habits = scheduleMapper.getHabitsWithProgress(userId);
 	        
-	        System.out.println(habits);
+//	        System.out.println(habits);
 	        
 			return habits;
 		} catch (Exception e) {
