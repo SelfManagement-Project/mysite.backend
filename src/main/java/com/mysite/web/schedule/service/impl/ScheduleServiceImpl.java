@@ -12,6 +12,7 @@ import com.mysite.web.schedule.dto.CalendarRequestDTO;
 import com.mysite.web.schedule.dto.CalendarResponseDTO;
 import com.mysite.web.schedule.dto.TaskRequestDTO;
 import com.mysite.web.schedule.dto.TaskResponseDTO;
+import com.mysite.web.schedule.dto.WeeklyProgressResponseDTO;
 import com.mysite.web.schedule.mapper.ScheduleMapper;
 import com.mysite.web.schedule.model.CalendarEntity;
 import com.mysite.web.schedule.model.TaskEntity;
@@ -65,7 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 			// JWT 토큰 검증 및 사용자 정보 추출
 			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
-			System.out.println("userid:::" + userId);
+//			System.out.println("userid:::" + userId);
 			if (userId == null) {
 				throw new RuntimeException("유효하지 않은 토큰입니다.");
 			}
@@ -98,7 +99,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 			// JWT 토큰 검증 및 사용자 정보 추출
 			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
-			System.out.println("userid:::" + userId);
+//			System.out.println("userid:::" + userId);
 			if (userId == null) {
 				throw new RuntimeException("유효하지 않은 토큰입니다.");
 			}
@@ -131,7 +132,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 			// JWT 토큰 검증 및 사용자 정보 추출
 			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
-			System.out.println("userid:::" + userId);
+//			System.out.println("userid:::" + userId);
 			if (userId == null) {
 				throw new RuntimeException("유효하지 않은 토큰입니다.");
 			}
@@ -165,7 +166,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 			// 사용자의 일정 목록 조회
 			List<TaskResponseDTO> taskList = scheduleMapper.getTodosByToken(userId);
-			System.out.println(taskList);
+//			System.out.println(taskList);
 			if (taskList == null) {
 				return Collections.emptyList();
 			}
@@ -189,7 +190,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	        // JWT 토큰 검증 및 사용자 정보 추출
 	        Long userId = JwtUtil.getUserIdFromToken(jwtToken);
-	        System.out.println("userid:::" + userId);
+//	        System.out.println("userid:::" + userId);
 	        if (userId == null) {
 	            throw new RuntimeException("유효하지 않은 토큰입니다.");
 	        }
@@ -213,9 +214,67 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 	
 	
+	// 다가오는 일정 조회
+	@Override
+	public List<CalendarResponseDTO> getUpcomingByToken(String token) {
+		try {
+			// Bearer 토큰에서 실제 토큰 값 추출
+			String jwtToken = token.substring(7); // "Bearer " 제거
+
+			// JWT 토큰 검증 및 사용자 정보 추출
+			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
+			if (userId == null) {
+				throw new RuntimeException("유효하지 않은 토큰입니다.");
+			}
+
+			// 사용자의 일정 목록 조회
+			List<CalendarResponseDTO> scheduleList = scheduleMapper.getUpcomingByToken(userId);
+			if (scheduleList == null) {
+				return Collections.emptyList();
+			}
+
+			return scheduleList;
+
+		} catch (Exception e) {
+			log.error("캘린더 조회 처리 중 오류 발생: {}", e.getMessage(), e);
+			throw new RuntimeException("캘린더 조회 처리 중 오류가 발생했습니다.", e);
+		}
+	}
 	
 	
-	
+	@Override
+    public WeeklyProgressResponseDTO getWeeklyProgress(String token) {
+		
+		try {
+			// Bearer 토큰에서 실제 토큰 값 추출
+			String jwtToken = token.substring(7); // "Bearer " 제거
+
+			// JWT 토큰 검증 및 사용자 정보 추출
+			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
+			if (userId == null) {
+				throw new RuntimeException("유효하지 않은 토큰입니다.");
+			}
+
+			int totalTasks = scheduleMapper.getTotalWeeklyTasks(userId);
+	        int completedTasks = scheduleMapper.getCompletedWeeklyTasks(userId);
+	        
+	        
+	        WeeklyProgressResponseDTO info = new WeeklyProgressResponseDTO(completedTasks, totalTasks);
+	        
+	        
+	        return info;
+
+
+		} catch (Exception e) {
+			log.error("캘린더 조회 처리 중 오류 발생: {}", e.getMessage(), e);
+			throw new RuntimeException("캘린더 조회 처리 중 오류가 발생했습니다.", e);
+		}
+		
+		
+		
+        
+
+    }
 	
 	
 	

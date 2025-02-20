@@ -11,12 +11,12 @@ import com.mysite.web.schedule.model.TaskEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskResponseDTO {
- private Long taskId;
- private Long userId;          // userId 추가
- private String content;
- private Integer priority;
- private Boolean isCompleted;
- private String checkStatus;
- private String createdAt;
- private String updatedAt;
+	private Long taskId;
+	private Long userId; // userId 추가
+	private String content;
+	private Integer priority;
+	private Boolean isCompleted;
+	private String checkStatus;
+	private String createdAt;
+	private String updatedAt;
 }

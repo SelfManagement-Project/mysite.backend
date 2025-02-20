@@ -6,6 +6,7 @@ import com.mysite.web.schedule.dto.CalendarRequestDTO;
 import com.mysite.web.schedule.dto.CalendarResponseDTO;
 import com.mysite.web.schedule.dto.TaskRequestDTO;
 import com.mysite.web.schedule.dto.TaskResponseDTO;
+import com.mysite.web.schedule.dto.WeeklyProgressResponseDTO;
 
 public interface ScheduleService {
 	List<CalendarResponseDTO> getScheduleByToken(String token);
@@ -14,4 +15,6 @@ public interface ScheduleService {
 	int deleteScheduleByToken(String token, Long scheduleId);
 	List<TaskResponseDTO> getTodosByToken(String token);
 	int modifyTodosByToken(String token, Long taskId, TaskRequestDTO taskRequestDTO);
+	List<CalendarResponseDTO> getUpcomingByToken(String token);
+	WeeklyProgressResponseDTO getWeeklyProgress(String token);
 }
