@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mysite.web.schedule.mapper.ScheduleMapper">
 	<select id="getScheduleByToken" parameterType="String"
-		resultType="com.mysite.web.schedule.model.ScheduleEntity">
+		resultType="com.mysite.web.schedule.model.CalendarEntity">
 		SELECT
 		s.schedule_id as scheduleId,
 		s.user_id as userId,
@@ -30,31 +30,89 @@
 	</select>
 
 	<insert id="writeScheduleByToken"
-		parameterType="com.mysite.web.schedule.model.ScheduleEntity">
+		parameterType="com.mysite.web.schedule.model.CalendarEntity">
 		INSERT INTO "schedule" (
-			user_id,
-			title,
-			date,
-			start_time,
-			end_time,
-			type,
-			is_completed,
-			created_at,
-			updated_at
+		user_id,
+		title,
+		date,
+		start_time,
+		end_time,
+		type,
+		is_completed,
+		created_at,
+		updated_at
 		) VALUES (
-			#{userId},
-			#{title},
-			#{date}::date,
-			#{start}::time,
-			#{end}::time,
-			#{type},
-			#{isCompleted},
-			CURRENT_TIMESTAMP,
-			CURRENT_TIMESTAMP
+		#{userId},
+		#{title},
+		#{date}::date,
+		#{start}::time,
+		#{end}::time,
+		#{type},
+		#{isCompleted},
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP
 		)
 	</insert>
 
+	<!-- 일정 수정 -->
+	<update id="modifyScheduleByToken"
+		parameterType="com.mysite.web.schedule.model.CalendarEntity">
+		UPDATE "schedule"
+		SET
+			title = #{title},
+			date = #{date}::date,
+			start_time = #{start}::time,
+			end_time = #{end}::time,
+			type = #{type},
+			is_completed = #{isCompleted},
+			updated_at = CURRENT_TIMESTAMP
+		WHERE schedule_id = #{scheduleId}
+		AND user_id = #{userId}
+	</update>
 
-
+	<delete id="deleteScheduleByToken" parameterType="com.mysite.web.schedule.model.CalendarEntity">
+	    DELETE FROM "schedule"
+	    WHERE schedule_id = #{scheduleId} 
+	    AND user_id = #{userId}
+	</delete>
+	
+	<!-- 오늘 할일 조회 -->
+	<select id="getTodosByToken" parameterType="Long" resultType="com.mysite.web.schedule.model.TaskEntity">
+	   SELECT 
+		    task_id as taskId,
+		    user_id as userId,
+		    content,
+		    priority,
+		    is_completed as isCompleted,
+		    check_status as checkStatus,
+		    created_at as createdAt,
+		    updated_at as updatedAt
+		FROM "task"
+		WHERE DATE(created_at) = CURRENT_DATE 
+		AND user_id = #{userId}
+		ORDER BY priority ASC, created_at DESC
+	</select>
+	
+	<update id="modifyTodosByToken" parameterType="com.mysite.web.schedule.model.TaskEntity">
+	    UPDATE "task"
+	    SET is_completed = #{isCompleted},
+	        updated_at = CURRENT_TIMESTAMP
+	    WHERE task_id = #{taskId}
+	    AND user_id = #{userId}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 </mapper>

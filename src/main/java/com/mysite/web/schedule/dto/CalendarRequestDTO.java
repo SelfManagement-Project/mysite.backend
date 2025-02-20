@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class ScheduleRequestDTO {
+public class CalendarRequestDTO {
 	private String title;
 	private String date;
     private String start;

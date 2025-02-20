@@ -4,13 +4,19 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.mysite.web.schedule.dto.ScheduleRequestDTO;
-import com.mysite.web.schedule.dto.ScheduleResponseDTO;
-import com.mysite.web.schedule.model.ScheduleEntity;
+import com.mysite.web.schedule.dto.CalendarRequestDTO;
+import com.mysite.web.schedule.dto.CalendarResponseDTO;
+import com.mysite.web.schedule.dto.TaskResponseDTO;
+import com.mysite.web.schedule.model.CalendarEntity;
+import com.mysite.web.schedule.model.TaskEntity;
 
 
 @Mapper
 public interface ScheduleMapper {
-	List<ScheduleResponseDTO> getScheduleByToken(String userEmail);
-	int writeScheduleByToken(ScheduleEntity dd);
+	List<CalendarResponseDTO> getScheduleByToken(String userEmail);
+	int writeScheduleByToken(CalendarEntity write);
+	int modifyScheduleByToken(CalendarEntity modify);
+	int deleteScheduleByToken(CalendarEntity scheduleEntity);
+	List<TaskResponseDTO> getTodosByToken(Long userId);
+	int modifyTodosByToken(TaskEntity taskEntity);
 }

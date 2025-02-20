@@ -11,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ScheduleResponseDTO {
+public class CalendarResponseDTO {
     private Long scheduleId;      // 일정 ID
     private Long userId;          // 일정 생성자 ID
     private String email;      // 일정 생성자 이름

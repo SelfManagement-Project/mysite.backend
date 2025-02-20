@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ScheduleEntity {
+public class CalendarEntity {
 	private Long scheduleId;      // 일정 ID
     private Long userId;          // 일정 생성자 ID
     private String email;      // 일정 생성자 이름

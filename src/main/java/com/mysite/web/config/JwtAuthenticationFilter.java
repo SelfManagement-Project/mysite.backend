@@ -16,14 +16,26 @@ import java.util.Collections;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         
+        // 로그인, 회원가입 등 인증이 필요없는 경로는 토큰 검증을 건너뜀
+        if (isPermitAllUrl(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = JwtUtil.getTokenByHeader(request);
         
-        if (token != null && JwtUtil.checkToken(token)) {
+        if (token == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"result\": \"error\", \"message\": \"no_token\"}");
+            return;
+        }
+
+        if (JwtUtil.checkToken(token)) {
             String userNo = JwtUtil.getSubjectFromToken(token);
             if (userNo != null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -32,8 +44,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+            filterChain.doFilter(request, response);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"result\": \"error\", \"message\": \"invalid_token\"}");
         }
-        
-        filterChain.doFilter(request, response);
+    }
+
+    private boolean isPermitAllUrl(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/auth/login") || 
+               path.startsWith("/api/auth/signup");
+               // 필요한 다른 공개 URL 추가
     }
 }
