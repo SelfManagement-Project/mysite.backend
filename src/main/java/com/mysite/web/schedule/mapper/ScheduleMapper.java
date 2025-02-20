@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.mysite.web.schedule.dto.CalendarRequestDTO;
 import com.mysite.web.schedule.dto.CalendarResponseDTO;
+import com.mysite.web.schedule.dto.HabitProgressDTO;
 import com.mysite.web.schedule.dto.TaskResponseDTO;
 import com.mysite.web.schedule.model.CalendarEntity;
 import com.mysite.web.schedule.model.TaskEntity;
@@ -22,6 +23,7 @@ public interface ScheduleMapper {
 	List<CalendarResponseDTO> getUpcomingByToken(Long userId);
 	int getTotalWeeklyTasks(Long userId);
 	int getCompletedWeeklyTasks(Long userId);
+	List<HabitProgressDTO> getHabitsWithProgress(Long userId);
 	
 	
 }

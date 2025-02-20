@@ -10,6 +10,7 @@ import com.mysite.web.login.mapper.LoginMapper;
 import com.mysite.web.login.util.JwtUtil;
 import com.mysite.web.schedule.dto.CalendarRequestDTO;
 import com.mysite.web.schedule.dto.CalendarResponseDTO;
+import com.mysite.web.schedule.dto.HabitProgressDTO;
 import com.mysite.web.schedule.dto.TaskRequestDTO;
 import com.mysite.web.schedule.dto.TaskResponseDTO;
 import com.mysite.web.schedule.dto.WeeklyProgressResponseDTO;
@@ -270,13 +271,35 @@ public class ScheduleServiceImpl implements ScheduleService {
 			throw new RuntimeException("캘린더 조회 처리 중 오류가 발생했습니다.", e);
 		}
 		
-		
-		
-        
 
     }
 	
-	
+	 @Override
+    public List<HabitProgressDTO> getHabitsByUser(String token) {
+		 
+		 
+		 
+		 try {
+			// Bearer 토큰에서 실제 토큰 값 추출
+			String jwtToken = token.substring(7); // "Bearer " 제거
+
+			// JWT 토큰 검증 및 사용자 정보 추출
+			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
+			if (userId == null) {
+				throw new RuntimeException("유효하지 않은 토큰입니다.");
+			}
+
+			List<HabitProgressDTO> habits = scheduleMapper.getHabitsWithProgress(userId);
+	        
+	        System.out.println(habits);
+	        
+			return habits;
+		} catch (Exception e) {
+			log.error("캘린더 조회 처리 중 오류 발생: {}", e.getMessage(), e);
+			throw new RuntimeException("캘린더 조회 처리 중 오류가 발생했습니다.", e);
+		}
+		 
+    }
 	
 	
 	

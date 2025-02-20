@@ -143,6 +143,25 @@
     </select>
 	
 	
+	<select id="getHabitsWithProgress" resultType="com.mysite.web.schedule.dto.HabitProgressDTO">
+	    SELECT 
+	        h.habit_id AS habitId,
+	        h.name AS name,
+	        COALESCE(
+	            ROUND(
+	                100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	            , 0), 0) AS completed,
+	        100 - COALESCE(
+	            ROUND(
+	                100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	            , 0), 0) AS remaining
+	    FROM habit h
+	    LEFT JOIN habit_log hl ON h.habit_id = hl.habit_id
+	    WHERE h.user_id = #{userId}
+	    GROUP BY h.habit_id, h.name
+	</select>
+	
+	
 	
 	
 	

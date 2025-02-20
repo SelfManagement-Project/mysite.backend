@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mysite.web.schedule.dto.CalendarRequestDTO;
 import com.mysite.web.schedule.dto.CalendarResponseDTO;
+import com.mysite.web.schedule.dto.HabitProgressDTO;
 import com.mysite.web.schedule.dto.TaskRequestDTO;
 import com.mysite.web.schedule.dto.TaskResponseDTO;
 import com.mysite.web.schedule.dto.WeeklyProgressResponseDTO;
@@ -17,4 +18,5 @@ public interface ScheduleService {
 	int modifyTodosByToken(String token, Long taskId, TaskRequestDTO taskRequestDTO);
 	List<CalendarResponseDTO> getUpcomingByToken(String token);
 	WeeklyProgressResponseDTO getWeeklyProgress(String token);
+	List<HabitProgressDTO> getHabitsByUser(String token);
 }

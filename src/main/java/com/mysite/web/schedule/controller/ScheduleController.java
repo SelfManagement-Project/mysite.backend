@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mysite.web.common.util.JsonResult;
 import com.mysite.web.schedule.dto.CalendarRequestDTO;
 import com.mysite.web.schedule.dto.CalendarResponseDTO;
+import com.mysite.web.schedule.dto.HabitProgressDTO;
 import com.mysite.web.schedule.dto.TaskRequestDTO;
 import com.mysite.web.schedule.dto.TaskResponseDTO;
 import com.mysite.web.schedule.dto.WeeklyProgressResponseDTO;
@@ -99,7 +100,11 @@ public class ScheduleController {
         return ResponseEntity.ok(JsonResult.success(response));
     }
 	
-	
+	@GetMapping("/habits")
+    public ResponseEntity<JsonResult> getUserHabits(@RequestHeader("Authorization") String token) {
+        List<HabitProgressDTO> habits = scheduleService.getHabitsByUser(token);
+        return ResponseEntity.ok().body(JsonResult.success(habits));
+    }
 	
 	
 
