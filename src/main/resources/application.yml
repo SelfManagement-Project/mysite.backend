@@ -55,9 +55,9 @@ file:
     windows: C:\Users\hi02\dev\upload\
     linux: /app/upload/
 
-logging:
-  level:
-    com.learningman.nagnae.authorization.repository.UserRepository: TRACE
-    com.learningman.nagnae.board.repository.BoardMapper: TRACE
-    com.learningman.nagnae.chatbot.repository.ChatHistoryRepository: TRACE
-    com.learningman.nagnae.study.repository.StudyMapper: TRACE
+#logging:
+#  level:
+#    com.learningman.nagnae.authorization.repository.UserRepository: TRACE
+#    com.learningman.nagnae.board.repository.BoardMapper: TRACE
+#    com.learningman.nagnae.chatbot.repository.ChatHistoryRepository: TRACE
+#    com.learningman.nagnae.study.repository.StudyMapper: TRACE

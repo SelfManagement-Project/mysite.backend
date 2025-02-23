@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mysite.web.finance.mapper.FinanceMapper">
+
+    <select id="getTransactionsByEmail" parameterType="String" resultType="com.mysite.web.finance.dto.TransactionDTO">
+        SELECT t.*
+		FROM "transaction" t
+		JOIN "user" u ON t.user_id = u.user_id
+		WHERE u.user_email = #{email}
+		ORDER BY t.date DESC
+		LIMIT 10
+    </select>
+
+    <select id="getCategoryBudgetsByEmail" parameterType="String" resultType="com.mysite.web.finance.dto.CategoryBudgetDTO">
+        SELECT cb.*
+		FROM "category_budget" cb
+		JOIN "budget" b ON cb.budget_id = b.budget_id
+		JOIN "user" u ON b.user_id = u.user_id
+		WHERE u.user_email = #{email}
+		AND b.month = EXTRACT(MONTH FROM CURRENT_DATE)
+		AND b.year = EXTRACT(YEAR FROM CURRENT_DATE)
+    </select>
+
+    <select id="getBudgetStatusByEmail" parameterType="String" resultType="com.mysite.web.finance.dto.BudgetStatusDTO">
+    <![CDATA[
+        WITH current_budget AS (
+	    SELECT 
+	        b.user_id,
+	        b.income,
+	        b.expenditure,
+	        b.savings
+	    FROM "budget" b
+	    JOIN "user" u ON b.user_id = u.user_id
+	    WHERE u.user_email = #{email}
+	    AND b.month = EXTRACT(MONTH FROM CURRENT_DATE)
+	    AND b.year = EXTRACT(YEAR FROM CURRENT_DATE)
+	)
+	SELECT
+	    b.income as total_income,
+	    b.expenditure as total_expense,
+	    b.savings as total_budget,
+	    COALESCE(SUM(t.amount), 0) as used_amount,
+	    b.savings - COALESCE(SUM(t.amount), 0) as remaining,
+	    CASE
+	        WHEN b.savings > 0 THEN
+	            ROUND(COALESCE(SUM(t.amount), 0) / b.savings * 100, 2)
+	        ELSE 0
+	    END as usage_percentage
+	FROM current_budget b
+	LEFT JOIN "transaction" t ON b.user_id = t.user_id
+	WHERE t.date >= DATE_TRUNC('month', CURRENT_DATE)
+	AND t.date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
+	GROUP BY b.income, b.expenditure, b.savings
+	]]>
+    </select>
+
+    <select id="getSavingsStatusByEmail" parameterType="String" resultType="com.mysite.web.finance.dto.SavingsStatusDTO">
+        SELECT 
+		    target_amount,
+		    current_amount,
+		    achievement_rate
+		FROM "savings_goal" sg
+		JOIN "user" u ON sg.user_id = u.user_id
+		WHERE u.user_email = #{email}
+		AND deadline >= CURRENT_DATE
+		ORDER BY deadline ASC
+		LIMIT 1
+    </select>
+
+</mapper>
