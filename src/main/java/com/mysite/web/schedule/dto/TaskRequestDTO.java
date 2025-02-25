@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskRequestDTO {
-    private String content;
+    private String title;
     private Integer priority;
     private Boolean isCompleted;
-    private String checkStatus;
+//    private String checkStatus;
 }

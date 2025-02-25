@@ -1,5 +1,6 @@
 package com.mysite.web.schedule.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -106,13 +107,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 			}
 
 			// ScheduleEntity로 변환
-			CalendarEntity scheduleEntity = CalendarEntity.builder().userId(userId).title(newEvent.getTitle())
+			CalendarEntity scheduleEntity = CalendarEntity.builder().userId(userId).scheduleId(newEvent.getScheduleId()).title(newEvent.getTitle())
 					.date(newEvent.getDate()).start(newEvent.getStart()).end(newEvent.getEnd()).type(newEvent.getType())
 					.description(newEvent.getDescription()).status("active")
 //            .createdAt(LocalDateTime.now().toString())
 //            .updatedAt(LocalDateTime.now().toString())
 					.build();
 
+			
 			int modifySchedule = scheduleMapper.modifyScheduleByToken(scheduleEntity);
 //	       System.out.println(scheduleList);
 
@@ -153,7 +155,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	// 오늘 할 일 조회
 	@Override
-	public List<TaskResponseDTO> getTodosByToken(String token) {
+	public List<CalendarResponseDTO> getTodosByToken(String token) {
 		try {
 			// Bearer 토큰에서 실제 토큰 값 추출
 			String jwtToken = token.substring(7); // "Bearer " 제거
@@ -166,7 +168,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 			}
 
 			// 사용자의 일정 목록 조회
-			List<TaskResponseDTO> taskList = scheduleMapper.getTodosByToken(userId);
+			List<CalendarResponseDTO> taskList = scheduleMapper.getTodosByToken(userId);
 //			System.out.println(taskList);
 			if (taskList == null) {
 				return Collections.emptyList();
@@ -184,7 +186,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 	
 	
 	@Override
-	public int modifyTodosByToken(String token, Long taskId, TaskRequestDTO taskRequestDTO) {
+	public int modifyTodosByToken(String token, Long scheduleId, TaskRequestDTO taskRequestDTO) {
+//		System.out.println("calendarRequestDTO:::" + calendarRequestDTO.isCompleted());
+//		System.out.println("scheduleId:::" + scheduleId);
 	    try {
 	        // Bearer 토큰에서 실제 토큰 값 추출
 	        String jwtToken = token.substring(7);
@@ -198,12 +202,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	        // TaskEntity 생성
 	        TaskEntity taskEntity = TaskEntity.builder()
-	            .taskId(taskId)
+	            .scheduleId(scheduleId)
 	            .userId(userId)
 	            .isCompleted(taskRequestDTO.getIsCompleted())  // 체크박스를 토글하는 것이므로 true로 설정
 //	            .updatedAt(LocalDateTime.now().toString())
 	            .build();
 
+	        
+	        System.out.println("taskEntity:::"+ taskEntity);
 	        int modifyTodos = scheduleMapper.modifyTodosByToken(taskEntity);
 	        
 	        return modifyTodos;

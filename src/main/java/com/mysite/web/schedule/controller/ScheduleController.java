@@ -68,7 +68,8 @@ public class ScheduleController {
 	// 오늘 할일 조회
 	@GetMapping("/todos")
 	public ResponseEntity<JsonResult> getTodos(@RequestHeader("Authorization") String token) {
-		List<TaskResponseDTO> events = scheduleService.getTodosByToken(token);
+		List<CalendarResponseDTO> events = scheduleService.getTodosByToken(token);
+//		System.out.println("events:::" + events);
 		return ResponseEntity.ok(JsonResult.success(events));
 	}
 
@@ -76,17 +77,18 @@ public class ScheduleController {
 	@PutMapping("/todos/{todoId}")
 	public ResponseEntity<JsonResult> modifyTodos(@RequestHeader("Authorization") String token,
 			@RequestBody TaskRequestDTO taskRequestDTO,
-			@PathVariable("todoId") Long taskId) {
-		int count = scheduleService.modifyTodosByToken(token, taskId, taskRequestDTO);
+			@PathVariable("todoId") Long scheduleId) {
+		System.out.println("test::::" + taskRequestDTO.getIsCompleted());
+		int count = scheduleService.modifyTodosByToken(token, scheduleId, taskRequestDTO);
 		return ResponseEntity.ok(JsonResult.success(count));
 	}
 
 	// 다가오는 일정 조회
 	@GetMapping("/upcoming")
 	public ResponseEntity<JsonResult> getUpcoming(@RequestHeader("Authorization") String token) {
-		System.out.println("token::::::" + token);
+//		System.out.println("token::::::" + token);
 		List<CalendarResponseDTO> events = scheduleService.getUpcomingByToken(token);
-		System.out.println(events);
+//		System.out.println(events);
 		
 		return ResponseEntity.ok(JsonResult.success(events));
 	}
@@ -96,7 +98,7 @@ public class ScheduleController {
     public ResponseEntity<JsonResult> getWeeklyProgress(@RequestHeader("Authorization") String token) {
         WeeklyProgressResponseDTO response = scheduleService.getWeeklyProgress(token);
         
-        System.out.println(response);
+//        System.out.println(response);
         return ResponseEntity.ok(JsonResult.success(response));
     }
 	

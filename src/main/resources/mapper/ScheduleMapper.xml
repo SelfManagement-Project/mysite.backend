@@ -16,7 +16,7 @@
 		s.type as type,
 		s.is_completed
 		as isCompleted,
-		<!-- s.description as description, s.status as status, -->
+		s.description as description,<!--  s.status as status, -->
 		s.created_at as createdAt,
 		s.updated_at as updatedAt
 		FROM
@@ -40,7 +40,8 @@
 		type,
 		is_completed,
 		created_at,
-		updated_at
+		updated_at,
+		description
 		) VALUES (
 		#{userId},
 		#{title},
@@ -50,7 +51,8 @@
 		#{type},
 		#{isCompleted},
 		CURRENT_TIMESTAMP,
-		CURRENT_TIMESTAMP
+		CURRENT_TIMESTAMP,
+		#{description}
 		)
 	</insert>
 
@@ -77,27 +79,32 @@
 	</delete>
 	
 	<!-- 오늘 할일 조회 -->
-	<select id="getTodosByToken" parameterType="Long" resultType="com.mysite.web.schedule.model.TaskEntity">
-	   SELECT 
-		    task_id as taskId,
-		    user_id as userId,
-		    content,
-		    priority,
-		    is_completed as isCompleted,
-		    check_status as checkStatus,
-		    created_at as createdAt,
-		    updated_at as updatedAt
-		FROM "task"
-		WHERE DATE(created_at) = CURRENT_DATE 
-		AND user_id = #{userId}
-		ORDER BY priority ASC, created_at DESC
+	<select id="getTodosByToken" parameterType="Long" resultType="com.mysite.web.schedule.model.CalendarEntity">
+	   SELECT
+	        s.schedule_id as scheduleId,
+	        s.user_id as userId,
+	        s.title as title,
+	        s.date as date,
+	        s.start_time as start,
+	        s.end_time as end,
+	        s.type as type,
+	        s.is_completed as isCompleted,
+	        s.created_at as createdAt,
+	        s.updated_at as updatedAt,
+			s.priority
+	    FROM schedule s
+	    JOIN "user" u ON s.user_id = u.user_id
+	    WHERE
+	        u.user_id = #{userId}
+	        AND s.date = CURRENT_DATE 
+	    ORDER BY s.date ASC, s.start_time ASC
 	</select>
 	
 	<update id="modifyTodosByToken" parameterType="com.mysite.web.schedule.model.TaskEntity">
-	    UPDATE "task"
+	    UPDATE "schedule"
 	    SET is_completed = #{isCompleted},
 	        updated_at = CURRENT_TIMESTAMP
-	    WHERE task_id = #{taskId}
+	    WHERE schedule_id = #{scheduleId}
 	    AND user_id = #{userId}
 	</update>
 	
@@ -128,7 +135,7 @@
 	<!-- 사용자의 이번 주 총 할 일 개수 -->
     <select id="getTotalWeeklyTasks" parameterType="long" resultType="int">
         SELECT COUNT(*)
-        FROM "task"
+        FROM "schedule"
         WHERE user_id = #{userId}
         AND created_at >= DATE_TRUNC('week', NOW())
     </select>
@@ -136,7 +143,7 @@
     <!-- 사용자의 이번 주 완료된 할 일 개수 -->
     <select id="getCompletedWeeklyTasks" parameterType="long" resultType="int">
         SELECT COUNT(*)
-        FROM "task"
+        FROM "schedule"
         WHERE user_id = #{userId}
         AND is_completed = true
         AND created_at >= DATE_TRUNC('week', NOW())

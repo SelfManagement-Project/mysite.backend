@@ -12,12 +12,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class TaskEntity {
-    private Long taskId;
+    private Long scheduleId;
     private Long userId;
-    private String content;
+    private String title;
     private Integer priority;
     private Boolean isCompleted;
-    private String checkStatus;
+//    private String checkStatus;
     private String createdAt;     // timestamp without time zone 타입과 매칭
     private String updatedAt;     // timestamp without time zone 타입과 매칭
 }

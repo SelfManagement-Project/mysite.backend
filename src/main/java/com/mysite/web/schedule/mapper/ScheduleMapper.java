@@ -18,7 +18,7 @@ public interface ScheduleMapper {
 	int writeScheduleByToken(CalendarEntity write);
 	int modifyScheduleByToken(CalendarEntity modify);
 	int deleteScheduleByToken(CalendarEntity scheduleEntity);
-	List<TaskResponseDTO> getTodosByToken(Long userId);
+	List<CalendarResponseDTO> getTodosByToken(Long userId);
 	int modifyTodosByToken(TaskEntity taskEntity);
 	List<CalendarResponseDTO> getUpcomingByToken(Long userId);
 	int getTotalWeeklyTasks(Long userId);

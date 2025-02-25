@@ -28,4 +28,5 @@ public class CalendarEntity {
     private String status;
     private String createdAt;
     private String updatedAt;
+    private Integer priority;
 }

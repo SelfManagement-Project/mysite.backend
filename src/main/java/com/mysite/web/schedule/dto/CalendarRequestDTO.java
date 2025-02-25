@@ -10,12 +10,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class CalendarRequestDTO {
+	private Long scheduleId; 
 	private String title;
 	private String date;
     private String start;
     private String end;
+    private boolean isCompleted;
     private boolean allDay;
     private String type;
     private String description;
     private String status;
+    private Integer priority;
 }

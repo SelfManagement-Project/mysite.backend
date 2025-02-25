@@ -26,4 +26,5 @@ public class CalendarResponseDTO {
     private String status;
     private String createdAt;
     private String updatedAt;
+    private Integer priority;
 }

@@ -14,8 +14,8 @@ public interface ScheduleService {
 	int writeScheduleByToken(String token, CalendarRequestDTO newEvent);
 	int modifyScheduleByToken(String token, CalendarRequestDTO updatedEvent);
 	int deleteScheduleByToken(String token, Long scheduleId);
-	List<TaskResponseDTO> getTodosByToken(String token);
-	int modifyTodosByToken(String token, Long taskId, TaskRequestDTO taskRequestDTO);
+	List<CalendarResponseDTO> getTodosByToken(String token);
+	int modifyTodosByToken(String token, Long scheduleId, TaskRequestDTO taskRequestDTO);
 	List<CalendarResponseDTO> getUpcomingByToken(String token);
 	WeeklyProgressResponseDTO getWeeklyProgress(String token);
 	List<HabitProgressDTO> getHabitsByUser(String token);
