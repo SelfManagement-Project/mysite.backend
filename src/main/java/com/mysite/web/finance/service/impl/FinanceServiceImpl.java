@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysite.web.common.service.IndexingService;
 import com.mysite.web.finance.dto.BudgetStatusDTO;
 import com.mysite.web.finance.dto.CategoryBudgetDTO;
 import com.mysite.web.finance.dto.SavingsStatusDTO;
@@ -22,6 +23,9 @@ public class FinanceServiceImpl implements FinanceService {
 	@Autowired
 	private FinanceMapper financeMapper;
 
+	@Autowired
+    private IndexingService indexingService;
+	
 	@Override
 	public List<TransactionDTO> getTransactions(String token) {
 		// Bearer 토큰에서 실제 토큰 값 추출
