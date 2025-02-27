@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysite.web.common.service.IndexingService;
 import com.mysite.web.login.mapper.LoginMapper;
 import com.mysite.web.login.util.JwtUtil;
 import com.mysite.web.schedule.dto.CalendarRequestDTO;
@@ -31,6 +32,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Autowired
 	private ScheduleMapper scheduleMapper;
 
+	@Autowired
+	private IndexingService indexingService;
+	
 	// 일정 조회
 	@Override
 	public List<CalendarResponseDTO> getScheduleByToken(String token) {
@@ -83,6 +87,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 			int writeSchedule = scheduleMapper.writeScheduleByToken(scheduleEntity);
 //	       System.out.println(scheduleList);
+			
+			// 새로 추가된 일정을 인덱싱
+			if (writeSchedule > 0 && scheduleEntity.getScheduleId() != null) {
+				// 인덱싱 요청
+				indexingService.indexRecord("schedule", scheduleEntity.getScheduleId());
+			}
 
 //	       return 0;
 			return writeSchedule;
@@ -118,6 +128,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 			int modifySchedule = scheduleMapper.modifyScheduleByToken(scheduleEntity);
 //	       System.out.println(scheduleList);
 
+			// 수정된 일정을 인덱싱
+			if (modifySchedule > 0) {
+				// 인덱싱 요청
+				indexingService.indexRecord("schedule", scheduleEntity.getScheduleId());
+			}
 //	       return 0;
 			return modifySchedule;
 
@@ -145,6 +160,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 			int deleteSchedule = scheduleMapper.deleteScheduleByToken(scheduleEntity);
 
+			// 삭제된 일정을 인덱스에서도 삭제
+			if (deleteSchedule > 0) {
+				// 인덱스에서 삭제 요청
+				indexingService.deleteFromIndex("schedule", scheduleId);
+			}
+			
 			return deleteSchedule;
 
 		} catch (Exception e) {
@@ -212,6 +233,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 	        System.out.println("taskEntity:::"+ taskEntity);
 	        int modifyTodos = scheduleMapper.modifyTodosByToken(taskEntity);
 	        
+	        // 수정된 할 일을 인덱싱
+	        if (modifyTodos > 0) {
+	            // 인덱싱 요청
+	            indexingService.indexRecord("schedule", scheduleId);
+	        }
 	        return modifyTodos;
 
 	    } catch (Exception e) {

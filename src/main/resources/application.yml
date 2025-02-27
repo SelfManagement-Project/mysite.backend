@@ -55,6 +55,11 @@ file:
     windows: C:\Users\hi02\dev\upload\
     linux: /app/upload/
 
+# Python 서버 설정
+python:
+  server:
+    url: http://localhost:8000
+
 #logging:
 #  level:
 #    com.learningman.nagnae.authorization.repository.UserRepository: TRACE
