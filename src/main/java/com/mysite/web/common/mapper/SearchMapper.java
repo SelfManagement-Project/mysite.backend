@@ -14,5 +14,5 @@ public interface SearchMapper {
     List<String> getAllTableNames();
 
     // 특정 테이블에서 검색 (XML 동적 SQL 사용)
-    List<Map<String, Object>> searchTable(@Param("tableName") String tableName, @Param("keyword") String keyword, @Param("columns") List<String> columns);
+    List<Map<String, Object>> searchTable(@Param("tableName") String tableName, @Param("keyword") String keyword, @Param("columns") List<String> columns,@Param("userId") Long userId);
 }

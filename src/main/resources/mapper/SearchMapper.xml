@@ -4,16 +4,21 @@
 
      <!-- DB에서 모든 테이블 목록 조회 -->
     <select id="getAllTableNames" resultType="string">
-        SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'
+        SELECT DISTINCT table_name 
+	    FROM information_schema.columns 
+	    WHERE column_name = 'user_id' 
+	    AND table_schema = 'public'
     </select>
 
     <!-- 특정 테이블에서 검색 (동적 SQL) -->
     <select id="searchTable" resultType="map">
 	    SELECT * FROM "${tableName}"
-	    WHERE 
-	    <foreach collection="columns" item="column" separator=" OR ">
-	        "${column}"::TEXT ILIKE '%' || #{keyword} || '%'
-	    </foreach>
+	    WHERE user_id = #{userId}  <!-- 🔹 로그인한 사용자의 데이터만 조회 -->
+    	AND (
+		    <foreach collection="columns" item="column" separator=" OR ">
+		        "${column}"::TEXT ILIKE '%' || #{keyword} || '%'
+		    </foreach>
+	    )
 	    LIMIT 5
 	</select>
 
