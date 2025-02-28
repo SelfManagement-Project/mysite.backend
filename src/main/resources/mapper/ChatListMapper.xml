@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mysite.web.ai.mapper.ChatListMapper">
+
+    <select id="getChatListByUserId" resultType="com.mysite.web.ai.dto.ChatListResponse">
+        SELECT c.chat_id, c.user_id, c.session_id, c.message, c.response, c.created_at, c.is_completed
+		FROM chat c
+		WHERE c.user_id = #{userId}
+	    <if test="search != null and search != ''">
+	        AND c.message ILIKE '%' || #{search} || '%'
+	    </if>
+	    ORDER BY c.created_at DESC
+    </select>
+
+</mapper>

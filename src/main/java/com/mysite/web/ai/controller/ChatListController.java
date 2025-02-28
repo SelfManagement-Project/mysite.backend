@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mysite.web.ai.dto.ChatHistoryResponse;
-import com.mysite.web.ai.service.ChatHistoryService;
+import com.mysite.web.ai.dto.ChatListResponse;
+import com.mysite.web.ai.service.ChatListService;
 import com.mysite.web.common.util.JsonResult;
 
 import lombok.RequiredArgsConstructor;
@@ -19,18 +19,20 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/ai")
 @RequiredArgsConstructor
-public class ChatHistoryController {
+public class ChatListController {
 
 	@Autowired
-	private ChatHistoryService chatHistoryService;
+	private ChatListService chatListService;
 
 	// 일정 조회
 	@GetMapping("/chat_history/list")
 	public ResponseEntity<JsonResult> getChatHistories(@RequestHeader("Authorization") String token,
 			@RequestParam(value = "search", required = false) String search) {
 		
-		List<ChatHistoryResponse> chat_history = chatHistoryService.getChatHistories(token, search);
-		return ResponseEntity.ok(JsonResult.success(chat_history));
+		System.out.println(search);
+		
+		List<ChatListResponse> chat_list = chatListService.getChatList(token, search);
+		return ResponseEntity.ok(JsonResult.success(chat_list));
 	}
 
 }

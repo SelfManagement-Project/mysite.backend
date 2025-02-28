@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mysite.web.ai.dto.ChatHistoryResponse;
-import com.mysite.web.ai.mapper.ChatHistoryMapper;
-import com.mysite.web.ai.service.ChatHistoryService;
+import com.mysite.web.ai.dto.ChatListResponse;
+import com.mysite.web.ai.mapper.ChatListMapper;
+import com.mysite.web.ai.service.ChatListService;
 import com.mysite.web.login.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ChatHistoryServiceImpl implements ChatHistoryService {
+public class ChatListServiceImpl implements ChatListService {
 
     @Autowired
-    private ChatHistoryMapper chatHistoryMapper;
+    private ChatListMapper chatListMapper;
 
     @Override
-    public List<ChatHistoryResponse> getChatHistories(String token, String search) {
+    public List<ChatListResponse> getChatList(String token, String search) {
         try {
             // Bearer 토큰에서 실제 토큰 값 추출
             String jwtToken = token.replace("Bearer ", "").trim();
@@ -35,13 +35,13 @@ public class ChatHistoryServiceImpl implements ChatHistoryService {
             }
 
             // 사용자의 채팅 히스토리 목록 조회
-            List<ChatHistoryResponse> chatHistoryList = chatHistoryMapper.getChatHistoriesByUserId(userId, search);
-            System.out.println("chatHistoryList::::" + chatHistoryList);
-            if (chatHistoryList == null) {
+            List<ChatListResponse> chatList = chatListMapper.getChatListByUserId(userId, search);
+            System.out.println("chatList::::" + chatList);
+            if (chatList == null) {
                 log.warn("chatHistoryList is null, returning empty list.");
                 return Collections.emptyList();
             }
-            return chatHistoryList;
+            return chatList;
 
 
         } catch (Exception e) {
