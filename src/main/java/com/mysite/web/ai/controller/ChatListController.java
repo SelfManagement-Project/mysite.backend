@@ -29,7 +29,7 @@ public class ChatListController {
 	public ResponseEntity<JsonResult> getChatHistories(@RequestHeader("Authorization") String token,
 			@RequestParam(value = "search", required = false) String search) {
 		
-		System.out.println(search);
+//		System.out.println(search);
 		
 		List<ChatListResponse> chat_list = chatListService.getChatList(token, search);
 		return ResponseEntity.ok(JsonResult.success(chat_list));

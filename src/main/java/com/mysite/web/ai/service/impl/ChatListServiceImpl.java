@@ -36,7 +36,7 @@ public class ChatListServiceImpl implements ChatListService {
 
             // 사용자의 채팅 히스토리 목록 조회
             List<ChatListResponse> chatList = chatListMapper.getChatListByUserId(userId, search);
-            System.out.println("chatList::::" + chatList);
+//            System.out.println("chatList::::" + chatList);
             if (chatList == null) {
                 log.warn("chatHistoryList is null, returning empty list.");
                 return Collections.emptyList();
