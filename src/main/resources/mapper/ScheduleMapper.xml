@@ -41,7 +41,8 @@
 		is_completed,
 		created_at,
 		updated_at,
-		description
+		description,
+		priority
 		) VALUES (
 		#{userId},
 		#{title},
@@ -52,7 +53,8 @@
 		#{isCompleted},
 		CURRENT_TIMESTAMP,
 		CURRENT_TIMESTAMP,
-		#{description}
+		#{description},
+		#{priority}
 		)
 	</insert>
 

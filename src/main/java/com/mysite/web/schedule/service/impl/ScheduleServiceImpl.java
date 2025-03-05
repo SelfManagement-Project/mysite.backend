@@ -80,7 +80,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 			// ScheduleEntity로 변환
 			CalendarEntity scheduleEntity = CalendarEntity.builder().userId(userId).title(newEvent.getTitle())
 					.date(newEvent.getDate()).start(newEvent.getStart()).end(newEvent.getEnd()).type(newEvent.getType())
-					.description(newEvent.getDescription()).status("active")
+					.description(newEvent.getDescription()).priority(newEvent.getPriority()).status("active")
 //            .createdAt(LocalDateTime.now().toString())
 //            .updatedAt(LocalDateTime.now().toString())
 					.build();
