@@ -24,6 +24,7 @@ public class CalendarEntity {
     private String end;
     private String type;
     private boolean isCompleted;
+    private boolean allDay;
     private String description;
     private String status;
     private String createdAt;

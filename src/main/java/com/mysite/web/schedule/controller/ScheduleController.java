@@ -37,6 +37,8 @@ public class ScheduleController {
 	@GetMapping("/calendar/list")
 	public ResponseEntity<JsonResult> getCalendar(@RequestHeader("Authorization") String token) {
 		List<CalendarResponseDTO> events = scheduleService.getScheduleByToken(token);
+		System.out.println(events);
+		
 		return ResponseEntity.ok(JsonResult.success(events));
 	}
 
@@ -44,7 +46,7 @@ public class ScheduleController {
 	@PostMapping("/calendar/write")
 	public ResponseEntity<JsonResult> writeCalendar(@RequestHeader("Authorization") String token,
 			@RequestBody CalendarRequestDTO newEvent) {
-		System.out.println(newEvent);
+//		System.out.println(newEvent);
 		int count = scheduleService.writeScheduleByToken(token, newEvent);
 		return ResponseEntity.ok(JsonResult.success(count));
 	}

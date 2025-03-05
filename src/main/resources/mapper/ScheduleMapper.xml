@@ -18,7 +18,8 @@
 		as isCompleted,
 		s.description as description,<!--  s.status as status, -->
 		s.created_at as createdAt,
-		s.updated_at as updatedAt
+		s.updated_at as updatedAt,
+		s.all_day as allDay
 		FROM
 		schedule s
 		JOIN
@@ -42,7 +43,8 @@
 		created_at,
 		updated_at,
 		description,
-		priority
+		priority,
+		all_day
 		) VALUES (
 		#{userId},
 		#{title},
@@ -54,7 +56,8 @@
 		CURRENT_TIMESTAMP,
 		CURRENT_TIMESTAMP,
 		#{description},
-		#{priority}
+		#{priority},
+		#{allDay}
 		)
 	</insert>
 
