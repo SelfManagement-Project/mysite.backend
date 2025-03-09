@@ -8,9 +8,11 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.ValidationUtils;
 
 import com.mysite.web.login.mapper.LoginMapper;
 import com.mysite.web.common.service.IndexingService;
+import com.mysite.web.common.util.SmsUtil;
 import com.mysite.web.login.dto.ForgotRequestDTO;
 import com.mysite.web.login.dto.LoginRequestDTO;
 import com.mysite.web.login.dto.LoginResponseDTO;
@@ -90,12 +92,23 @@ public class LoginServiceImpl implements LoginService {
 	// 아이디 찾기
 	@Override
 	public int forgotId(ForgotRequestDTO request) {
+		System.out.println("request::::" + request);
 		// 유저 체크
-//		UserEntity existingUser = loginMapper.findByEmail(request.getEmail());
-//		if (existingUser != null) {
-//			throw new RuntimeException("이미 존재하는 이메일입니다.");
-//		}
-		System.out.println("ID:::" + request);
+		UserEntity existingUser = loginMapper.findByNamePhone(request);
+		if (existingUser == null) {
+			throw new RuntimeException("계정이 없습니다.");
+		}
+		System.out.println("정보:::" + existingUser);
+		
+		
+//		String receiverEmail = existingUser.getEmail();
+//        String verificationCode = ValidationUtils.createCode();
+//        SmsUtil.sendOne(phoneNum, verificationCode);
+//        
+//        //인증코드 유효기간 5분 설정
+//        redisUtil.setDataExpire(verificationCode, receiverEmail, 60 * 5L);
+		
+		
 		try {
 //			// 비밀번호 암호화
 //			request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -126,12 +139,14 @@ public class LoginServiceImpl implements LoginService {
 	// 비밀번호 찾기
 	@Override
 	public int forgotPw(ForgotRequestDTO request) {
-		// 이메일 중복 체크
-//		UserEntity existingUser = loginMapper.findByEmail(request.getEmail());
-//		if (existingUser != null) {
-//			throw new RuntimeException("이미 존재하는 이메일입니다.");
-//		}
-		System.out.println("PW:::" + request);
+		
+		System.out.println("request::::" + request);
+		// 유저 체크
+		UserEntity existingUser = loginMapper.findByEmailPhone(request);
+		if (existingUser == null) {
+			throw new RuntimeException("계정이 없습니다.");
+		}
+		System.out.println("정보:::" + existingUser);
 		try {
 //			// 비밀번호 암호화
 //			request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -159,7 +174,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 
-	// 아이디 찾기
+	// 아이디 중복 체크
 	@Override
 	public int checkId(SignUpRequestDTO request) {
 		// 유저 체크

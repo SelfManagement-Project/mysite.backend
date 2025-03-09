@@ -60,6 +60,14 @@ python:
   server:
     url: http://localhost:8000
 
+
+#coolsms:
+#  api:
+#    key: NCSLQL4H6PYPSGVY
+#    secret: 0CVQK714L5TESTEVZSYTREGG7YMOTQE9
+#    number: 01012345678
+
+
 #logging:
 #  level:
 #    com.learningman.nagnae.authorization.repository.UserRepository: TRACE
