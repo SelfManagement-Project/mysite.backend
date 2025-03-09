@@ -55,7 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean isPermitAllUrl(HttpServletRequest request) {
         String path = request.getRequestURI();
         return path.startsWith("/api/auth/login") || 
-               path.startsWith("/api/auth/signup");
+               path.startsWith("/api/auth/signup") ||
+               path.startsWith("/api/auth/forgot_id") ||
+               path.startsWith("/api/auth/check_id") ||
+               path.startsWith("/api/auth/forgot_pw");
                // 필요한 다른 공개 URL 추가
     }
 }

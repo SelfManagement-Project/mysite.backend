@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SignUpResponseDTO {
+public class ForgotResponseDTO {
     private Long userId;
     private String email;
     private String username;

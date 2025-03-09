@@ -17,4 +17,8 @@ public class SignUpRequestDTO {
 	private String email;
     private String password;
     private String name;
+    private String userHp;
+    private String userAddress;
+    private String residentNum;
+    
 }
