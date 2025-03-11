@@ -58,7 +58,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                path.startsWith("/api/auth/signup") ||
                path.startsWith("/api/auth/forgot_id") ||
                path.startsWith("/api/auth/check_id") ||
-               path.startsWith("/api/auth/forgot_pw");
+               path.startsWith("/api/auth/forgot_pw") ||
+               path.startsWith("/api/auth/sms/send") ||
+               path.startsWith("/api/auth/sms/verify")
+               ;
                // 필요한 다른 공개 URL 추가
     }
 }

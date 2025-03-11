@@ -69,6 +69,7 @@ dependencies {
 	
 	// 핸드폰 인증 라이브러리
 	implementation 'net.nurigo:sdk:4.3.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	
 }
 

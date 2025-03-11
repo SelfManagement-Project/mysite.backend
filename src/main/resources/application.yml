@@ -60,13 +60,10 @@ python:
   server:
     url: http://localhost:8000
 
-
-#coolsms:
-#  api:
-#    key: NCSLQL4H6PYPSGVY
-#    secret: 0CVQK714L5TESTEVZSYTREGG7YMOTQE9
-#    number: 01012345678
-
+coolsms:
+  apiKey: NCSLQL4H6PYPSGVY
+  apiSecret: 0CVQK714L5TESTEVZSYTREGG7YMOTQE9
+  senderNumber: 01050940355
 
 #logging:
 #  level:

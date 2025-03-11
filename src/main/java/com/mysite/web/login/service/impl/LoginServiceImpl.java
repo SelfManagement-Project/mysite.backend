@@ -6,13 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.ValidationUtils;
 
 import com.mysite.web.login.mapper.LoginMapper;
 import com.mysite.web.common.service.IndexingService;
-import com.mysite.web.common.util.SmsUtil;
 import com.mysite.web.login.dto.ForgotRequestDTO;
 import com.mysite.web.login.dto.LoginRequestDTO;
 import com.mysite.web.login.dto.LoginResponseDTO;
@@ -35,6 +36,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private IndexingService indexingService;
+	
+	@Autowired
+    private JavaMailSender emailSender;
 
 	// 로그인
 	@Override
@@ -91,44 +95,18 @@ public class LoginServiceImpl implements LoginService {
 
 	// 아이디 찾기
 	@Override
-	public int forgotId(ForgotRequestDTO request) {
-		System.out.println("request::::" + request);
+	public String forgotId(ForgotRequestDTO request) {
 		// 유저 체크
 		UserEntity existingUser = loginMapper.findByNamePhone(request);
 		if (existingUser == null) {
 			throw new RuntimeException("계정이 없습니다.");
 		}
-		System.out.println("정보:::" + existingUser);
-		
-		
-//		String receiverEmail = existingUser.getEmail();
-//        String verificationCode = ValidationUtils.createCode();
-//        SmsUtil.sendOne(phoneNum, verificationCode);
-//        
-//        //인증코드 유효기간 5분 설정
-//        redisUtil.setDataExpire(verificationCode, receiverEmail, 60 * 5L);
-		
-		
-		try {
-//			// 비밀번호 암호화
-//			request.setPassword(passwordEncoder.encode(request.getPassword()));
-//
-//			// 회원가입 실행
-//			int count = loginMapper.exeSignUp(request);
-//
-//			// 회원가입 성공 시 인덱싱
-//			if (count > 0) {
-//				// 새로 생성된 사용자 ID 가져오기 (만약 매퍼에서 ID를 반환하지 않는다면 추가 조회 필요)
-//				UserEntity newUser = loginMapper.findByEmail(request.getEmail());
-//				if (newUser != null && newUser.getUserId() != null) {
-//					// 인덱싱 요청
-//					indexingService.indexRecord("user", newUser.getUserId());
-//				}
-//			}
 
-			// 성공 응답 반환
-//			return count;
-			return 0;
+		String userEmail = existingUser.getUserEmail();
+
+		try {
+
+			return userEmail;
 
 		} catch (Exception e) {
 			log.error("회원가입 처리 중 오류 발생: {}", e.getMessage(), e);
@@ -140,31 +118,42 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public int forgotPw(ForgotRequestDTO request) {
 		
-		System.out.println("request::::" + request);
+//		System.out.println("request::::" + request);
 		// 유저 체크
 		UserEntity existingUser = loginMapper.findByEmailPhone(request);
 		if (existingUser == null) {
 			throw new RuntimeException("계정이 없습니다.");
 		}
-		System.out.println("정보:::" + existingUser);
+//		System.out.println("정보:::" + existingUser);
 		try {
-//			// 비밀번호 암호화
-//			request.setPassword(passwordEncoder.encode(request.getPassword()));
+			// 임시 비밀번호 생성(랜덤)
+//	        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+//	                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 //
-//			// 회원가입 실행
-//			int count = loginMapper.exeSignUp(request);
+//	        StringBuilder tempPwBuilder = new StringBuilder();
 //
-//			// 회원가입 성공 시 인덱싱
-//			if (count > 0) {
-//				// 새로 생성된 사용자 ID 가져오기 (만약 매퍼에서 ID를 반환하지 않는다면 추가 조회 필요)
-//				UserEntity newUser = loginMapper.findByEmail(request.getEmail());
-//				if (newUser != null && newUser.getUserId() != null) {
-//					// 인덱싱 요청
-//					indexingService.indexRecord("user", newUser.getUserId());
-//				}
-//			}
-
-			// 성공 응답 반환
+//	        for (int i = 0; i < 10; i++) {
+//	            int idx = (int) (charSet.length * Math.random());
+//	            tempPwBuilder.append(charSet[idx]);
+//	        }
+//	    	
+//	        // StringBuilder를 String으로 변환
+//	        String tempPw = tempPwBuilder.toString();
+//	        
+//	        existingUser.setUserPw(tempPw);
+//	        
+//	        SimpleMailMessage message = new SimpleMailMessage();
+//	        message.setTo(emailDto.getTo());
+//	        message.setSubject(emailDto.getSubject());
+//	        message.setText("You PW : " + tempPw);
+//	        emailSender.send(message);
+//	        
+//	        // 비밀밀번호 엔코딩 및 변경
+//	        existingUser.setUserPw(passwordEncoder.encode(existingUser.getUserPw()));
+//	        
+//	        
+//	        int count = loginMapper.FindUserPwUpdate(existingUser);
+//
 //			return count;
 			return 0;
 
