@@ -73,13 +73,14 @@ public class LoginController {
 	@PostMapping("/forgot_pw")
 	public ResponseEntity<JsonResult> forgotPw(@RequestBody ForgotRequestDTO forgotRequestDTO) {
 		// 실제 서비스 로직 호출
-		int result = loginService.forgotPw(forgotRequestDTO);
-		if (result > 0) {
-			return ResponseEntity.ok(JsonResult.success("success"));
-
-		} else {
-			return ResponseEntity.ok(JsonResult.fail("fail"));
-		}
+//		int result = loginService.forgotPw(forgotRequestDTO);
+//		if (result > 0) {
+//			return ResponseEntity.ok(JsonResult.success("success"));
+//
+//		} else {
+//			return ResponseEntity.ok(JsonResult.fail("fail"));
+//		}
+		return ResponseEntity.ok(JsonResult.success("test"));
 	}
 
 	// 이메일 중복체크
