@@ -126,35 +126,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 //		System.out.println("정보:::" + existingUser);
 		try {
-			// 임시 비밀번호 생성(랜덤)
-//	        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-//	                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
-//
-//	        StringBuilder tempPwBuilder = new StringBuilder();
-//
-//	        for (int i = 0; i < 10; i++) {
-//	            int idx = (int) (charSet.length * Math.random());
-//	            tempPwBuilder.append(charSet[idx]);
-//	        }
-//	    	
-//	        // StringBuilder를 String으로 변환
-//	        String tempPw = tempPwBuilder.toString();
-//	        
-//	        existingUser.setUserPw(tempPw);
-//	        
-//	        SimpleMailMessage message = new SimpleMailMessage();
-//	        message.setTo(emailDto.getTo());
-//	        message.setSubject(emailDto.getSubject());
-//	        message.setText("You PW : " + tempPw);
-//	        emailSender.send(message);
-//	        
-//	        // 비밀밀번호 엔코딩 및 변경
-//	        existingUser.setUserPw(passwordEncoder.encode(existingUser.getUserPw()));
-//	        
-//	        
-//	        int count = loginMapper.FindUserPwUpdate(existingUser);
-//
-//			return count;
+
 			return 0;
 
 		} catch (Exception e) {

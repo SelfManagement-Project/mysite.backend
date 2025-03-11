@@ -16,6 +16,8 @@ import com.mysite.web.common.dto.PhoneNumberRequestDTO;
 import com.mysite.web.common.dto.VerificationRequestDTO;
 import com.mysite.web.common.service.VerificationService;
 import com.mysite.web.common.util.JsonResult;
+import com.mysite.web.login.dto.EmailVerificationCodeDTO;
+import com.mysite.web.login.dto.EmailVerificationRequestDTO;
 import com.mysite.web.login.dto.ForgotRequestDTO;
 import com.mysite.web.login.dto.ForgotResponseDTO;
 import com.mysite.web.login.dto.LoginRequestDTO;
@@ -132,5 +134,33 @@ public class LoginController {
 		}
 //		return ResponseEntity.ok("test");
 	}
+	
+	// 이메일 인증번호 발송 API
+    @PostMapping("/email/send")
+    public ResponseEntity<JsonResult> sendEmailVerificationCode(@RequestBody EmailVerificationRequestDTO request) {
+//    	System.out.println("request:::"+ request);
+        try {
+            verificationService.sendEmailVerificationCode(request.getEmail());
+            return ResponseEntity.ok(JsonResult.success("인증번호가 발송되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(JsonResult.fail("인증번호 발송에 실패했습니다: " + e.getMessage()));
+        }
+    }
+
+    // 이메일 인증번호 확인 API
+    @PostMapping("/email/verify")
+    public ResponseEntity<JsonResult> verifyEmailCode(@RequestBody EmailVerificationCodeDTO request) {
+        boolean isValid = verificationService.verifyEmailCode(request.getEmail(), request.getCode());
+        
+        if (isValid) {
+            return ResponseEntity.ok(JsonResult.success(isValid));
+        } else {
+            return ResponseEntity.badRequest().body(JsonResult.success(isValid));
+        }
+    }
+	
+	
+	
+
 
 }
