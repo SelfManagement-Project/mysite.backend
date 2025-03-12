@@ -21,4 +21,11 @@ public class UserEntity {
     private String lastLogin;
     private boolean isActive;
     private String role;
+    private String userHp;
+    private String userAddress;
+    private String residentNum;
+    
+    // 소셜 로그인을 위한 필드 추가
+    private String socialId;  // 소셜 계정 ID
+    private String socialType;  // 소셜 유형 (KAKAO, GOOGLE, NAVER)
 }

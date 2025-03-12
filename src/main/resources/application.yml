@@ -65,6 +65,14 @@ coolsms:
   apiSecret: 0CVQK714L5TESTEVZSYTREGG7YMOTQE9
   senderNumber: 01050940355
 
+# 카카오 로그인 설정
+kakao:
+  client:
+    id: 037b4750462926ddfa5052315f6e6872
+    secret: jIiBSJS9KOA4FMLlmReAwt0TBY7bxTDH
+  redirect:
+    uri: http://localhost:5173/oauth/kakao/callback
+
 #logging:
 #  level:
 #    com.learningman.nagnae.authorization.repository.UserRepository: TRACE

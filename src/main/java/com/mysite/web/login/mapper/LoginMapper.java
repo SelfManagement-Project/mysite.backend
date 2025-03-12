@@ -1,8 +1,8 @@
 package com.mysite.web.login.mapper;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.mysite.web.login.dto.ForgotRequestDTO;
 import com.mysite.web.login.dto.SignUpRequestDTO;
@@ -17,4 +17,8 @@ public interface LoginMapper {
     UserEntity findByEmailPhone(ForgotRequestDTO request);
     int FindUserPwUpdate(UserEntity userInfo);
     int exePwUpdate(ForgotRequestDTO request);
+    
+    // 소셜 로그인을 위한 메서드 추가
+    UserEntity findBySocialId(@Param("socialId") String socialId, @Param("socialType") String socialType);
+    int exeSignUpSocial(UserEntity user);
 }

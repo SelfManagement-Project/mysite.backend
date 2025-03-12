@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mysite.web.login.service.KakaoLoginService;
 import com.mysite.web.login.service.LoginService;
 import com.mysite.web.common.dto.PhoneNumberRequestDTO;
 import com.mysite.web.common.dto.VerificationRequestDTO;
@@ -22,6 +23,7 @@ import com.mysite.web.login.dto.EmailVerificationCodeDTO;
 import com.mysite.web.login.dto.EmailVerificationRequestDTO;
 import com.mysite.web.login.dto.ForgotRequestDTO;
 import com.mysite.web.login.dto.ForgotResponseDTO;
+import com.mysite.web.login.dto.KakaoLoginRequestDTO;
 import com.mysite.web.login.dto.LoginRequestDTO;
 import com.mysite.web.login.dto.LoginResponseDTO;
 import com.mysite.web.login.dto.SignUpRequestDTO;
@@ -37,6 +39,9 @@ public class LoginController {
 
 	@Autowired
 	private VerificationService verificationService;
+	
+	@Autowired
+    private KakaoLoginService kakaoLoginService;
 
 	// 로그인
 	@PostMapping("/login")
@@ -163,7 +168,11 @@ public class LoginController {
         }
     }
 	
-	
+    @PostMapping("/kakao-callback")
+    public ResponseEntity<JsonResult> kakaoLogin(@RequestBody KakaoLoginRequestDTO kakaoLoginRequest) {
+        LoginResponseDTO auth = kakaoLoginService.processKakaoLogin(kakaoLoginRequest.getCode());
+        return ResponseEntity.ok(JsonResult.success(auth));
+    }
 	
 
 
