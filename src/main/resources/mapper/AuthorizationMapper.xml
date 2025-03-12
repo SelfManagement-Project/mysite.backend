@@ -96,7 +96,15 @@
 		user_address as userAddress,
 		resident_num as residentNum
 		FROM "user"
-		WHERE user_email = #{email} and user_hp = #{userHp}
+		WHERE user_email = #{email}
 	</select>
+
+	<!-- 비밀번호 변경 -->
+	<update id="exePwUpdate" parameterType="com.mysite.web.login.dto.ForgotRequestDTO">
+		UPDATE "user"
+		SET user_pw = #{password}
+		WHERE user_email = #{email}
+	</update>
+
 
 </mapper>

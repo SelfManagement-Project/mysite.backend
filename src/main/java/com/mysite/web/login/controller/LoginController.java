@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,17 +71,17 @@ public class LoginController {
 	}
 
 	// 비밀번호 찾기
-	@PostMapping("/forgot_pw")
+	@PutMapping("/forgot_pw")
 	public ResponseEntity<JsonResult> forgotPw(@RequestBody ForgotRequestDTO forgotRequestDTO) {
 		// 실제 서비스 로직 호출
-//		int result = loginService.forgotPw(forgotRequestDTO);
-//		if (result > 0) {
-//			return ResponseEntity.ok(JsonResult.success("success"));
-//
-//		} else {
-//			return ResponseEntity.ok(JsonResult.fail("fail"));
-//		}
-		return ResponseEntity.ok(JsonResult.success("test"));
+		int result = loginService.forgotPw(forgotRequestDTO);
+		if (result > 0) {
+			return ResponseEntity.ok(JsonResult.success("success"));
+
+		} else {
+			return ResponseEntity.ok(JsonResult.fail("fail"));
+		}
+//		return ResponseEntity.ok(JsonResult.success("test"));
 	}
 
 	// 이메일 중복체크

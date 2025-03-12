@@ -14,4 +14,5 @@ public interface LoginMapper {
     UserEntity findByNamePhone(ForgotRequestDTO request);
     UserEntity findByEmailPhone(ForgotRequestDTO request);
     int FindUserPwUpdate(UserEntity userInfo);
+    int exePwUpdate(ForgotRequestDTO request);
 }

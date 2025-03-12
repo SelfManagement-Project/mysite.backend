@@ -117,8 +117,7 @@ public class LoginServiceImpl implements LoginService {
 	// 비밀번호 찾기
 	@Override
 	public int forgotPw(ForgotRequestDTO request) {
-		
-//		System.out.println("request::::" + request);
+		int count;
 		// 유저 체크
 		UserEntity existingUser = loginMapper.findByEmailPhone(request);
 		if (existingUser == null) {
@@ -126,8 +125,12 @@ public class LoginServiceImpl implements LoginService {
 		}
 //		System.out.println("정보:::" + existingUser);
 		try {
-
-			return 0;
+			// 비밀번호 암호화
+			request.setPassword(passwordEncoder.encode(request.getPassword()));
+			System.out.println("request::" + request);
+			count = loginMapper.exePwUpdate(request);
+			System.out.println("count::::" + count);
+			return count;
 
 		} catch (Exception e) {
 			log.error("회원가입 처리 중 오류 발생: {}", e.getMessage(), e);
