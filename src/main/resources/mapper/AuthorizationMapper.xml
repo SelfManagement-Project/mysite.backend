@@ -96,7 +96,7 @@
 		user_address as userAddress,
 		resident_num as residentNum
 		FROM "user"
-		WHERE user_email = #{email}
+		WHERE user_email = #{email} and user_hp = #{userHp}
 	</select>
 
 	<!-- 비밀번호 변경 -->

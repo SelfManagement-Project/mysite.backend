@@ -1,5 +1,7 @@
 package com.mysite.web.login.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.mysite.web.login.dto.ForgotRequestDTO;
@@ -11,7 +13,7 @@ public interface LoginMapper {
     UserEntity findByEmail(String email);
     int exeSignUp(SignUpRequestDTO request);
     void exeUpdateLastLogin(String email);
-    UserEntity findByNamePhone(ForgotRequestDTO request);
+    List<UserEntity> findByNamePhone(ForgotRequestDTO request);
     UserEntity findByEmailPhone(ForgotRequestDTO request);
     int FindUserPwUpdate(UserEntity userInfo);
     int exePwUpdate(ForgotRequestDTO request);

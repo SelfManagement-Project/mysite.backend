@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -95,18 +96,20 @@ public class LoginServiceImpl implements LoginService {
 
 	// 아이디 찾기
 	@Override
-	public String forgotId(ForgotRequestDTO request) {
+	public List<UserEntity> forgotId(ForgotRequestDTO request) {
 		// 유저 체크
-		UserEntity existingUser = loginMapper.findByNamePhone(request);
+		List<UserEntity> existingUser = loginMapper.findByNamePhone(request);
+		System.out.println("testestesttest");
 		if (existingUser == null) {
 			throw new RuntimeException("계정이 없습니다.");
 		}
-
-		String userEmail = existingUser.getUserEmail();
+		System.out.println(existingUser);
+//		String userEmail = existingUser.getUserEmail();
 
 		try {
 
-			return userEmail;
+//			return userEmail;
+			return existingUser;
 
 		} catch (Exception e) {
 			log.error("회원가입 처리 중 오류 발생: {}", e.getMessage(), e);

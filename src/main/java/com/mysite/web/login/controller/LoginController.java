@@ -2,6 +2,7 @@ package com.mysite.web.login.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class LoginController {
 	@PostMapping("/forgot_id")
 	public ResponseEntity<JsonResult> forgotId(@RequestBody ForgotRequestDTO forgotRequestDTO) {
 		// 실제 서비스 로직 호출
-		String result = loginService.forgotId(forgotRequestDTO);
+		List<UserEntity> result = loginService.forgotId(forgotRequestDTO);
 		System.out.println(result);
 		if (result != null) {
 			return ResponseEntity.ok(JsonResult.success(result));
@@ -73,6 +74,7 @@ public class LoginController {
 	// 비밀번호 찾기
 	@PutMapping("/forgot_pw")
 	public ResponseEntity<JsonResult> forgotPw(@RequestBody ForgotRequestDTO forgotRequestDTO) {
+		System.out.println(forgotRequestDTO);
 		// 실제 서비스 로직 호출
 		int result = loginService.forgotPw(forgotRequestDTO);
 		if (result > 0) {
