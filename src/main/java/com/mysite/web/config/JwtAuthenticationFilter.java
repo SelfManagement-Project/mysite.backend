@@ -63,6 +63,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                path.startsWith("/api/auth/sms/verify") ||
                path.startsWith("/api/auth/email/send") ||
                path.startsWith("/api/auth/email/verify") ||
-               path.startsWith("/api/auth/kakao-callback"); // 카카오 콜백 경로 추가
+               path.startsWith("/api/auth/kakao-callback") ||
+               path.startsWith("/api/auth/naver-callback") ||
+               path.startsWith("/api/auth/google-callback"); // 구글 콜백 경로 추가
     }
 }

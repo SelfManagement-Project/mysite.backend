@@ -73,6 +73,23 @@ kakao:
   redirect:
     uri: http://localhost:5173/oauth/kakao/callback
 
+# 네이버 로그인 설정
+naver:
+  client:
+    id: GNL1ZsPzNKSBVTKrzrn3
+    secret: wGh76bNhDa
+  redirect:
+    uri: http://localhost:5173/oauth/naver/callback
+
+# 구글 로그인 설정
+google:
+  client:
+    id: 1035458597855-agjemb473p5h7o4kvodl4lkjv5jhi9cf.apps.googleusercontent.com
+    secret: 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
+  redirect:
+    uri: http://localhost:5173/oauth/google/callback
+
+
 #logging:
 #  level:
 #    com.learningman.nagnae.authorization.repository.UserRepository: TRACE

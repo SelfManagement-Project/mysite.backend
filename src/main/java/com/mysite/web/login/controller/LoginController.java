@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mysite.web.login.service.GoogleLoginService;
 import com.mysite.web.login.service.KakaoLoginService;
 import com.mysite.web.login.service.LoginService;
+import com.mysite.web.login.service.NaverLoginService;
 import com.mysite.web.common.dto.PhoneNumberRequestDTO;
 import com.mysite.web.common.dto.VerificationRequestDTO;
 import com.mysite.web.common.service.VerificationService;
@@ -23,9 +25,11 @@ import com.mysite.web.login.dto.EmailVerificationCodeDTO;
 import com.mysite.web.login.dto.EmailVerificationRequestDTO;
 import com.mysite.web.login.dto.ForgotRequestDTO;
 import com.mysite.web.login.dto.ForgotResponseDTO;
+import com.mysite.web.login.dto.GoogleLoginRequestDTO;
 import com.mysite.web.login.dto.KakaoLoginRequestDTO;
 import com.mysite.web.login.dto.LoginRequestDTO;
 import com.mysite.web.login.dto.LoginResponseDTO;
+import com.mysite.web.login.dto.NaverLoginRequestDTO;
 import com.mysite.web.login.dto.SignUpRequestDTO;
 import com.mysite.web.login.model.UserEntity;
 
@@ -39,9 +43,15 @@ public class LoginController {
 
 	@Autowired
 	private VerificationService verificationService;
+
+	@Autowired
+	private KakaoLoginService kakaoLoginService;
 	
 	@Autowired
-    private KakaoLoginService kakaoLoginService;
+    private NaverLoginService naverLoginService;
+	
+	@Autowired
+    private GoogleLoginService googleLoginService;
 
 	// 로그인
 	@PostMapping("/login")
@@ -134,7 +144,7 @@ public class LoginController {
 			phoneNumber = "0" + phoneNumber.substring(5); // +82 제거하고 앞에 0 추가
 		}
 		boolean isValid = verificationService.verifyCode(phoneNumber, request.getCode());
-		
+
 		System.out.println("isValid::::" + isValid);
 		if (isValid) {
 			return ResponseEntity.ok(JsonResult.success(isValid));
@@ -143,37 +153,50 @@ public class LoginController {
 		}
 //		return ResponseEntity.ok("test");
 	}
-	
-	// 이메일 인증번호 발송 API
-    @PostMapping("/email/send")
-    public ResponseEntity<JsonResult> sendEmailVerificationCode(@RequestBody EmailVerificationRequestDTO request) {
-//    	System.out.println("request:::"+ request);
-        try {
-            verificationService.sendEmailVerificationCode(request.getEmail());
-            return ResponseEntity.ok(JsonResult.success("인증번호가 발송되었습니다."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(JsonResult.fail("인증번호 발송에 실패했습니다: " + e.getMessage()));
-        }
-    }
 
-    // 이메일 인증번호 확인 API
-    @PostMapping("/email/verify")
-    public ResponseEntity<JsonResult> verifyEmailCode(@RequestBody EmailVerificationCodeDTO request) {
-        boolean isValid = verificationService.verifyEmailCode(request.getEmail(), request.getCode());
-        
-        if (isValid) {
-            return ResponseEntity.ok(JsonResult.success(isValid));
-        } else {
-            return ResponseEntity.badRequest().body(JsonResult.success(isValid));
-        }
-    }
-	
-    @PostMapping("/kakao-callback")
-    public ResponseEntity<JsonResult> kakaoLogin(@RequestBody KakaoLoginRequestDTO kakaoLoginRequest) {
-        LoginResponseDTO auth = kakaoLoginService.processKakaoLogin(kakaoLoginRequest.getCode());
+	// 이메일 인증번호 발송 API
+	@PostMapping("/email/send")
+	public ResponseEntity<JsonResult> sendEmailVerificationCode(@RequestBody EmailVerificationRequestDTO request) {
+//    	System.out.println("request:::"+ request);
+		try {
+			verificationService.sendEmailVerificationCode(request.getEmail());
+			return ResponseEntity.ok(JsonResult.success("인증번호가 발송되었습니다."));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(JsonResult.fail("인증번호 발송에 실패했습니다: " + e.getMessage()));
+		}
+	}
+
+	// 이메일 인증번호 확인 API
+	@PostMapping("/email/verify")
+	public ResponseEntity<JsonResult> verifyEmailCode(@RequestBody EmailVerificationCodeDTO request) {
+		boolean isValid = verificationService.verifyEmailCode(request.getEmail(), request.getCode());
+
+		if (isValid) {
+			return ResponseEntity.ok(JsonResult.success(isValid));
+		} else {
+			return ResponseEntity.badRequest().body(JsonResult.success(isValid));
+		}
+	}
+
+	// 카카오 로그인
+	@PostMapping("/kakao-callback")
+	public ResponseEntity<JsonResult> kakaoLogin(@RequestBody KakaoLoginRequestDTO kakaoLoginRequest) {
+		LoginResponseDTO auth = kakaoLoginService.processKakaoLogin(kakaoLoginRequest.getCode());
+		return ResponseEntity.ok(JsonResult.success(auth));
+	}
+
+	// 네이버 로그인
+	@PostMapping("/naver-callback")
+    public ResponseEntity<JsonResult> naverLogin(@RequestBody NaverLoginRequestDTO naverLoginRequest) {
+        LoginResponseDTO auth = naverLoginService.processNaverLogin(naverLoginRequest.getCode(), naverLoginRequest.getState());
         return ResponseEntity.ok(JsonResult.success(auth));
     }
 	
-
+	// 구글 로그인
+	@PostMapping("/google-callback")
+    public ResponseEntity<JsonResult> googleLogin(@RequestBody GoogleLoginRequestDTO googleLoginRequest) {
+        LoginResponseDTO auth = googleLoginService.processGoogleLogin(googleLoginRequest.getCode());
+        return ResponseEntity.ok(JsonResult.success(auth));
+    }
 
 }
