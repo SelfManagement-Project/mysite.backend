@@ -11,5 +11,13 @@
 	    </if>
 	    ORDER BY c.created_at DESC
     </select>
+    
+    <select id="getChatListRecentByUserId" resultType="com.mysite.web.ai.dto.ChatListResponse">
+        SELECT chat_id, user_id, session_id, message, response, created_at, is_completed
+		FROM chat
+		WHERE user_id = #{userId}
+		ORDER BY created_at DESC
+		LIMIT 5
+    </select>
 
 </mapper>

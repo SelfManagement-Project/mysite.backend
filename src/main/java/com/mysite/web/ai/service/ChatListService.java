@@ -7,4 +7,5 @@ import com.mysite.web.ai.dto.ChatListResponse;
 
 public interface ChatListService {
 	List<ChatListResponse> getChatList(String token, String search);
+	List<ChatListResponse> getChatListRecent(String token);
 }

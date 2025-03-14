@@ -24,15 +24,24 @@ public class ChatListController {
 	@Autowired
 	private ChatListService chatListService;
 
-	// 일정 조회
-	@GetMapping("/chat_history/list")
-	public ResponseEntity<JsonResult> getChatHistories(@RequestHeader("Authorization") String token,
+	// 대화목록 Tab의 chat 리스트 조회
+	@GetMapping("/chat/list/total")
+	public ResponseEntity<JsonResult> getChatList(@RequestHeader("Authorization") String token,
 			@RequestParam(value = "search", required = false) String search) {
-		
+
 //		System.out.println(search);
-		
+
 		List<ChatListResponse> chat_list = chatListService.getChatList(token, search);
 		return ResponseEntity.ok(JsonResult.success(chat_list));
 	}
 
+	// 최근 대화 챗 리스트
+	@GetMapping("/chat/list/recent")
+	public ResponseEntity<JsonResult> getChatListRecent(@RequestHeader("Authorization") String token) {
+
+//			System.out.println(search);
+
+		List<ChatListResponse> chat_list_recent = chatListService.getChatListRecent(token);
+		return ResponseEntity.ok(JsonResult.success(chat_list_recent));
+	}
 }

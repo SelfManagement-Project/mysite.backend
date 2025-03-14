@@ -11,4 +11,6 @@ public interface ChatListMapper {
         @Param("userId") Long userId,
         @Param("search") String search
     );
+    List<ChatListResponse> getChatListRecentByUserId(Long userId);
+    
 }
