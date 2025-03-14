@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mysite.web.ai.dto.ChatHistoryResponseDTO;
 import com.mysite.web.ai.dto.ChatListResponse;
 import com.mysite.web.ai.service.ChatListService;
 import com.mysite.web.common.util.JsonResult;
@@ -44,4 +47,16 @@ public class ChatListController {
 		List<ChatListResponse> chat_list_recent = chatListService.getChatListRecent(token);
 		return ResponseEntity.ok(JsonResult.success(chat_list_recent));
 	}
+
+	@GetMapping("/chat/history/{chatId}")
+	public ResponseEntity<JsonResult> getChatHistory(
+	    @RequestHeader("Authorization") String token,
+	    @PathVariable("chatId") Long chatId
+	) {
+	    List<ChatHistoryResponseDTO> chatHistory = chatListService.getChatHistory(token, chatId);
+	    return ResponseEntity.ok(JsonResult.success(chatHistory));
+	}
+	
+	
+	
 }

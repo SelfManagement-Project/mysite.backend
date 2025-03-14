@@ -19,5 +19,15 @@
 		ORDER BY created_at DESC
 		LIMIT 5
     </select>
+    
+    <select id="getChatHistoryByChatId" parameterType="com.mysite.web.ai.dto.ChatHistoryRequestDTO" resultType="com.mysite.web.ai.model.ChatHistoryEntity">
+	    SELECT history_id, chat_id, session_id, message_type, content, created_at
+	    FROM chat_history
+	    WHERE chat_id = #{chatId}
+	    AND EXISTS (
+	        SELECT 1 FROM chat c WHERE c.chat_id = #{chatId} AND c.user_id = #{userId}
+	    )
+	    ORDER BY created_at ASC
+	</select>
 
 </mapper>
