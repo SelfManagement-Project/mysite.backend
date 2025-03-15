@@ -105,6 +105,7 @@ public class ScheduleController {
         return ResponseEntity.ok(JsonResult.success(response));
     }
 	
+	// 습관 차트 데이터 조회
 	@GetMapping("/habits")
     public ResponseEntity<JsonResult> getUserHabits(@RequestHeader("Authorization") String token) {
         List<HabitProgressDTO> habits = scheduleService.getHabitsByUser(token);
