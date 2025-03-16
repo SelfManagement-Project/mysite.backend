@@ -161,11 +161,17 @@
 	        h.name AS name,
 	        COALESCE(
 	            ROUND(
-	                100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	                CASE 
+	                    WHEN COUNT(hl.log_id) = 0 THEN 0
+	                    ELSE 100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	                END
 	            , 0), 0) AS completed,
-	        100 - COALESCE(
+	        COALESCE(
 	            ROUND(
-	                100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	                CASE 
+	                    WHEN COUNT(hl.log_id) = 0 THEN 100
+	                    ELSE 100 - (100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id))
+	                END
 	            , 0), 0) AS remaining
 	    FROM habit h
 	    LEFT JOIN habit_log hl ON h.habit_id = hl.habit_id
@@ -176,9 +182,217 @@
 	
 	
 	
+	<!-- 습관 추가 -->
+	<insert id="addHabit" parameterType="com.mysite.web.schedule.model.HabitEntity" useGeneratedKeys="true" keyProperty="habitId">
+	    INSERT INTO habit (
+	        user_id,
+	        name,
+	        description,
+	        frequency,
+	        created_at,
+	        updated_at
+	    ) VALUES (
+	        #{userId},
+	        #{name},
+	        #{description},
+	        #{frequency},
+	        CURRENT_TIMESTAMP,
+	        CURRENT_TIMESTAMP
+	    )
+	    RETURNING habit_id
+	</insert>
 	
+	<!-- 기간별 습관 조회 -->
+	<select id="getHabitsWithProgressByDateRange" resultType="com.mysite.web.schedule.dto.HabitProgressDTO">
+	    SELECT 
+	        h.habit_id AS habitId,
+	        h.name AS name,
+	        CASE 
+	            WHEN COUNT(hl.log_id) = 0 THEN 0
+	            ELSE COALESCE(
+	                ROUND(
+	                    100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / NULLIF(COUNT(hl.log_id), 0)
+	                , 0), 0)
+	        END AS completed,
+	        CASE 
+	            WHEN COUNT(hl.log_id) = 0 THEN 100
+	            ELSE 100 - COALESCE(
+	                ROUND(
+	                    100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / NULLIF(COUNT(hl.log_id), 0)
+	                , 0), 0)
+	        END AS remaining
+	    FROM habit h
+	    LEFT JOIN habit_log hl ON h.habit_id = hl.habit_id
+	    WHERE h.user_id = #{userId}
+	    AND (hl.log_date BETWEEN #{startDate} AND #{endDate} OR hl.log_date IS NULL)
+	    GROUP BY h.habit_id, h.name
+	</select>
 	
+	<!-- 습관 목표 업데이트 -->
+	<update id="updateHabitGoal">
+	    UPDATE habit
+	    SET 
+	        goal_count = #{goalCount},
+	        updated_at = CURRENT_TIMESTAMP
+	    WHERE habit_id = #{habitId}
+	    AND user_id = #{userId}
+	</update>
 	
+	<!-- 일일 습관 진행 상황 조회 -->
+	<select id="getDailyHabitProgress" resultType="com.mysite.web.schedule.dto.DailyProgressDTO">
+	    SELECT 
+	        TO_CHAR(hl.log_date, 'Dy') AS day,
+	        ROUND(
+	            100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	        , 0) AS completionRate
+	    FROM habit_log hl
+	    JOIN habit h ON hl.habit_id = h.habit_id
+	    WHERE h.user_id = #{userId}
+	    AND hl.log_date BETWEEN #{startDate} AND #{endDate}
+	    GROUP BY hl.log_date
+	    ORDER BY hl.log_date
+	</select>
+	
+	<!-- 주간 습관 완료율 조회 -->
+	<select id="getWeeklyCompletionRate" resultType="java.lang.Integer">
+	    SELECT 
+	        COALESCE(
+	            ROUND(
+	                100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	            , 0), 0)
+	    FROM habit_log hl
+	    JOIN habit h ON hl.habit_id = h.habit_id
+	    WHERE h.user_id = #{userId}
+	    AND hl.log_date BETWEEN #{startDate} AND #{endDate}
+	</select>
+	
+	<!-- 월간 습관 완료율 조회 -->
+	<select id="getMonthlyCompletionRate" resultType="java.lang.Integer">
+	    SELECT 
+	        COALESCE(
+	            ROUND(
+	                100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	            , 0), 0)
+	    FROM habit_log hl
+	    JOIN habit h ON hl.habit_id = h.habit_id
+	    WHERE h.user_id = #{userId}
+	    AND hl.log_date BETWEEN #{startDate} AND #{endDate}
+	</select>
+	
+	<!-- 습관별 주간 달성률 조회 -->
+	<select id="getHabitWeeklyRates" resultMap="habitWeeklyRateMap">
+	    WITH weeks AS (
+	        SELECT 
+	            generate_series(
+	                date_trunc('week', #{startDate}::timestamp)::date,
+	                date_trunc('week', #{endDate}::timestamp)::date,
+	                '1 week'::interval
+	            ) AS week_start
+	    ),
+	    habit_rates AS (
+	        SELECT 
+	            h.habit_id,
+	            h.name,
+	            date_trunc('week', hl.log_date::timestamp)::date AS week_start,
+	            ROUND(
+	                100.0 * SUM(CASE WHEN hl.status = '완료' THEN 1 ELSE 0 END) / COUNT(hl.log_id)
+	            , 0) AS rate
+	        FROM habit h
+	        LEFT JOIN habit_log hl ON h.habit_id = hl.habit_id
+	        WHERE h.user_id = #{userId}
+	        AND hl.log_date BETWEEN #{startDate} AND #{endDate}
+	        GROUP BY h.habit_id, h.name, week_start
+	    )
+	    SELECT 
+	        h.habit_id AS habit_id,
+	        h.name AS name,
+	        COALESCE(hr.rate, 0) AS rate,
+	        w.week_start
+	    FROM habit h
+	    CROSS JOIN weeks w
+	    LEFT JOIN habit_rates hr ON h.habit_id = hr.habit_id AND w.week_start = hr.week_start
+	    WHERE h.user_id = #{userId}
+	    ORDER BY h.habit_id, w.week_start
+	</select>
+	
+	<!-- ResultMap for HabitWeeklyRateDTO -->
+	<resultMap id="habitWeeklyRateMap" type="com.mysite.web.schedule.dto.HabitWeeklyRateDTO">
+	    <id property="habitId" column="habit_id" />
+	    <result property="name" column="name" />
+	    <collection property="rates" ofType="java.lang.Integer" javaType="java.util.ArrayList">
+	        <result column="rate" />
+	    </collection>
+	</resultMap>
+	
+	<!-- 해당 날짜의 습관 로그 조회 -->
+	<select id="getHabitLogByDate" resultType="com.mysite.web.schedule.model.HabitLogEntity">
+	    SELECT 
+	        log_id as logId,
+	        habit_id as habitId,
+	        user_id as userId,
+	        log_date as logDate,
+	        status,
+	        created_at as createdAt,
+	        updated_at as updatedAt
+	    FROM habit_log
+	    WHERE user_id = #{userId}
+	    AND habit_id = #{habitId}
+	    AND log_date = #{logDate}
+	</select>
+	
+	<!-- 습관 로그 추가 -->
+	<insert id="insertHabitLog" parameterType="com.mysite.web.schedule.model.HabitLogEntity" useGeneratedKeys="true" keyProperty="logId">
+	    INSERT INTO habit_log (
+	        habit_id,
+	        user_id,
+	        log_date,
+	        status,
+	        created_at,
+	        updated_at
+	    ) VALUES (
+	        #{habitId},
+	        #{userId},
+	        #{logDate},
+	        #{status},
+	        CURRENT_TIMESTAMP,
+	        CURRENT_TIMESTAMP
+	    )
+	</insert>
+	
+	<!-- 습관 로그 업데이트 -->
+	<update id="updateHabitLog" parameterType="com.mysite.web.schedule.model.HabitLogEntity">
+	    UPDATE habit_log
+	    SET 
+	        status = #{status},
+	        updated_at = CURRENT_TIMESTAMP
+	    WHERE log_id = #{logId}
+	</update>
+	
+	<!-- 습관 로그 삭제 -->
+	<delete id="deleteHabitLog">
+	    DELETE FROM habit_log
+	    WHERE user_id = #{userId}
+	    AND habit_id = #{habitId}
+	    AND log_date = #{logDate}
+	</delete>
+	
+	<!-- 오늘의 습관 상태 조회 -->
+	<select id="getTodayHabitStatus" resultType="com.mysite.web.schedule.dto.HabitStatusDTO">
+	    SELECT 
+	        h.habit_id AS habitId,
+	        h.name,
+	        h.description,
+	        h.frequency,
+	        h.goal_count AS goalCount,
+	        CASE WHEN hl.status = '완료' THEN true ELSE false END AS isCompleted,
+	        COALESCE(hl.log_date, #{today}) AS logDate
+	    FROM habit h
+	    LEFT JOIN habit_log hl ON h.habit_id = hl.habit_id 
+	        AND hl.log_date = #{today}
+	        AND hl.user_id = #{userId}
+	    WHERE h.user_id = #{userId}
+	    ORDER BY h.name
+	</select>
 	
 	
 	
