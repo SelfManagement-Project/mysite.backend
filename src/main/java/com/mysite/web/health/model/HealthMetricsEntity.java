@@ -20,6 +20,6 @@ public class HealthMetricsEntity {
 
     private double bmi;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 }

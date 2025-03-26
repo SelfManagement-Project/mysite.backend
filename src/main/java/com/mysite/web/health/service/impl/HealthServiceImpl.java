@@ -8,12 +8,21 @@ import org.springframework.stereotype.Service;
 
 import com.mysite.web.common.service.IndexingService;
 import com.mysite.web.health.dto.DietRequestDTO;
+import com.mysite.web.health.dto.DietResponseDTO;
 import com.mysite.web.health.dto.ExerciseRequestDTO;
+import com.mysite.web.health.dto.ExerciseResponseDTO;
 import com.mysite.web.health.dto.HealthMetricsRequestDTO;
+import com.mysite.web.health.dto.HealthMetricsResponseDTO;
 import com.mysite.web.health.dto.SleepRequestDTO;
+import com.mysite.web.health.dto.SleepResponseDTO;
 import com.mysite.web.health.mapper.HealthMapper;
+import com.mysite.web.health.model.DietEntity;
+import com.mysite.web.health.model.ExerciseEntity;
+import com.mysite.web.health.model.HealthMetricsEntity;
+import com.mysite.web.health.model.SleepEntity;
 import com.mysite.web.health.service.HealthService;
 import com.mysite.web.login.util.JwtUtil;
+import com.mysite.web.schedule.model.CalendarEntity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,25 +36,26 @@ public class HealthServiceImpl implements HealthService {
 	private HealthMapper healthMapper;
 
 	@Autowired
-    private IndexingService indexingService;
-	
-	
+	private IndexingService indexingService;
+
 	@Override
-	public List<ExerciseRequestDTO> getExercise(String token) {
+	public List<ExerciseResponseDTO> getExercise(String token, String date) {
 		try {
 			// Bearer 토큰에서 실제 토큰 값 추출
 			String jwtToken = token.substring(7); // "Bearer " 제거
 
 			// JWT 토큰 검증 및 사용자 정보 추출
-			String userEmail = JwtUtil.getSubjectFromToken(jwtToken);
+			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
 //	       System.out.println("useremail:::" + userEmail);
-			if (userEmail == null) {
+			if (userId == null) {
 				throw new RuntimeException("유효하지 않은 토큰입니다.");
 			}
 
+			ExerciseEntity exerciseEntity = ExerciseEntity.builder().userId(userId).createdAt(date).build();
+
 			// 사용자의 일정 목록 조회
-			List<ExerciseRequestDTO> exerciseList = healthMapper.getExercise(userEmail);
-//	       System.out.println(scheduleList);
+			List<ExerciseResponseDTO> exerciseList = healthMapper.getExercise(exerciseEntity);
+	       System.out.println("exerciseList:::" + exerciseList);
 			if (exerciseList == null) {
 				return Collections.emptyList();
 			}
@@ -57,24 +67,24 @@ public class HealthServiceImpl implements HealthService {
 			throw new RuntimeException("캘린더 조회 처리 중 오류가 발생했습니다.", e);
 		}
 	}
-	
-	
-	
+
 	@Override
-	public List<DietRequestDTO> getDiet(String token) {
+	public List<DietResponseDTO> getDiet(String token, String date) {
 		try {
 			// Bearer 토큰에서 실제 토큰 값 추출
 			String jwtToken = token.substring(7); // "Bearer " 제거
 
 			// JWT 토큰 검증 및 사용자 정보 추출
-			String userEmail = JwtUtil.getSubjectFromToken(jwtToken);
-//	       System.out.println("useremail:::" + userEmail);
-			if (userEmail == null) {
+			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
+//		       System.out.println("useremail:::" + userEmail);
+			if (userId == null) {
 				throw new RuntimeException("유효하지 않은 토큰입니다.");
 			}
 
+			DietEntity dietEntity = DietEntity.builder().userId(userId).createdAt(date).build();
+			
 			// 사용자의 일정 목록 조회
-			List<DietRequestDTO> dietList = healthMapper.getDiet(userEmail);
+			List<DietResponseDTO> dietList = healthMapper.getDiet(dietEntity);
 //	       System.out.println(scheduleList);
 			if (dietList == null) {
 				return Collections.emptyList();
@@ -87,24 +97,22 @@ public class HealthServiceImpl implements HealthService {
 			throw new RuntimeException("캘린더 조회 처리 중 오류가 발생했습니다.", e);
 		}
 	}
-	
-	
-	
+
 	@Override
-	public List<SleepRequestDTO> getSleep(String token) {
+	public List<SleepResponseDTO> getSleep(String token, String date) {
 		try {
 			// Bearer 토큰에서 실제 토큰 값 추출
 			String jwtToken = token.substring(7); // "Bearer " 제거
 
 			// JWT 토큰 검증 및 사용자 정보 추출
-			String userEmail = JwtUtil.getSubjectFromToken(jwtToken);
-//	       System.out.println("useremail:::" + userEmail);
-			if (userEmail == null) {
+			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
+//		       System.out.println("useremail:::" + userEmail);
+			if (userId == null) {
 				throw new RuntimeException("유효하지 않은 토큰입니다.");
 			}
-
+			SleepEntity sleepEntity = SleepEntity.builder().userId(userId).createdAt(date).build();
 			// 사용자의 일정 목록 조회
-			List<SleepRequestDTO> sleepList = healthMapper.getSleep(userEmail);
+			List<SleepResponseDTO> sleepList = healthMapper.getSleep(sleepEntity);
 //	       System.out.println(scheduleList);
 			if (sleepList == null) {
 				return Collections.emptyList();
@@ -117,24 +125,24 @@ public class HealthServiceImpl implements HealthService {
 			throw new RuntimeException("캘린더 조회 처리 중 오류가 발생했습니다.", e);
 		}
 	}
-	
-	
 
 	@Override
-	public List<HealthMetricsRequestDTO> getMetrics(String token) {
+	public List<HealthMetricsResponseDTO> getMetrics(String token, String date) {
 		try {
 			// Bearer 토큰에서 실제 토큰 값 추출
 			String jwtToken = token.substring(7); // "Bearer " 제거
 
 			// JWT 토큰 검증 및 사용자 정보 추출
-			String userEmail = JwtUtil.getSubjectFromToken(jwtToken);
-//	       System.out.println("useremail:::" + userEmail);
-			if (userEmail == null) {
+			Long userId = JwtUtil.getUserIdFromToken(jwtToken);
+//		       System.out.println("useremail:::" + userEmail);
+			if (userId == null) {
 				throw new RuntimeException("유효하지 않은 토큰입니다.");
 			}
 
+			HealthMetricsEntity healthMetricsEntity = HealthMetricsEntity.builder().userId(userId).createdAt(date).build();
+			
 			// 사용자의 일정 목록 조회
-			List<HealthMetricsRequestDTO> metricsList = healthMapper.getMetrics(userEmail);
+			List<HealthMetricsResponseDTO> metricsList = healthMapper.getMetrics(healthMetricsEntity);
 //	       System.out.println(scheduleList);
 			if (metricsList == null) {
 				return Collections.emptyList();
@@ -147,11 +155,5 @@ public class HealthServiceImpl implements HealthService {
 			throw new RuntimeException("캘린더 조회 처리 중 오류가 발생했습니다.", e);
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
+
 }

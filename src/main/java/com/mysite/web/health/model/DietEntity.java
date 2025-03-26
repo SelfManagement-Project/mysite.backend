@@ -22,6 +22,6 @@ public class DietEntity {
 
     private int carbs;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 }

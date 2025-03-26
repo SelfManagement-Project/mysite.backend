@@ -1,19 +1,20 @@
 package com.mysite.web.health.controller;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mysite.web.common.util.JsonResult;
-import com.mysite.web.health.dto.DietRequestDTO;
-import com.mysite.web.health.dto.ExerciseRequestDTO;
-import com.mysite.web.health.dto.HealthMetricsRequestDTO;
-import com.mysite.web.health.dto.SleepRequestDTO;
+import com.mysite.web.health.dto.DietResponseDTO;
+import com.mysite.web.health.dto.ExerciseResponseDTO;
+import com.mysite.web.health.dto.HealthMetricsResponseDTO;
+import com.mysite.web.health.dto.SleepResponseDTO;
 import com.mysite.web.health.service.HealthService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,50 +26,43 @@ public class HealthController {
 	
 	@Autowired
     private HealthService healthService;
-
+    
     @GetMapping("/exercise")
     public ResponseEntity<JsonResult> getExercise(
-            @RequestHeader("Authorization") String token) {
+            @RequestHeader("Authorization") String token,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String date) {
     	
-    	List<ExerciseRequestDTO> result = healthService.getExercise(token);
-//    	System.out.println("exercise test입니다" + result);
-    	
+    	List<ExerciseResponseDTO> result = healthService.getExercise(token, date);
         return ResponseEntity.ok(JsonResult.success(result));
-//        return ResponseEntity.ok(JsonResult.success("test"));
     }
     
     @GetMapping("/diet")
     public ResponseEntity<JsonResult> getDiet(
-            @RequestHeader("Authorization") String token) {
-    	
-    	List<DietRequestDTO> result = healthService.getDiet(token);
-//    	System.out.println("diet test입니다");
+            @RequestHeader("Authorization") String token,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String date) {
+    	System.out.println("date:::::::::::" + date);
+    	List<DietResponseDTO> result = healthService.getDiet(token, date);
     	
         return ResponseEntity.ok(JsonResult.success(result));
-//        return ResponseEntity.ok(JsonResult.success("test"));
     }
     
     @GetMapping("/sleep")
     public ResponseEntity<JsonResult> getSleep(
-            @RequestHeader("Authorization") String token) {
+            @RequestHeader("Authorization") String token,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String date) {
     	
-    	List<SleepRequestDTO> result = healthService.getSleep(token);
-//    	System.out.println("sleep test입니다");
+    	List<SleepResponseDTO> result = healthService.getSleep(token, date);
     	
         return ResponseEntity.ok(JsonResult.success(result));
-//        return ResponseEntity.ok(JsonResult.success("test"));
     }
     
     @GetMapping("/metrics")
     public ResponseEntity<JsonResult> getMetrics(
-            @RequestHeader("Authorization") String token) {
+            @RequestHeader("Authorization") String token,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String date) {
     	
-    	List<HealthMetricsRequestDTO> result = healthService.getMetrics(token);
-//    	System.out.println("metrics test입니다"+ result);
+    	List<HealthMetricsResponseDTO> result = healthService.getMetrics(token, date);
     	
         return ResponseEntity.ok(JsonResult.success(result));
-//        return ResponseEntity.ok(JsonResult.success("test"));
     }
-	
-	
 }

@@ -20,6 +20,6 @@ public class SleepEntity {
 
     private int sleepQuality;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 }

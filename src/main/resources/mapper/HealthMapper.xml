@@ -2,58 +2,70 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mysite.web.health.mapper.HealthMapper">
 
-    <!-- 운동 데이터 조회 -->
-    <select id="getExercise" resultType="com.mysite.web.health.dto.ExerciseRequestDTO">
-        SELECT 
-            exercise_id AS exerciseId,
-            user_id AS userId,
-            facility_id AS facilityId,
-            exercise_type AS exerciseType,
-            duration,
-            calories_burned AS caloriesBurned
-        FROM exercise
-        WHERE user_id = (SELECT user_id FROM "user" WHERE user_email = #{userEmail})
-        ORDER BY created_at DESC
-    </select>
-
-    <!-- 식단 데이터 조회 -->
-    <select id="getDiet" resultType="com.mysite.web.health.dto.DietRequestDTO">
-        SELECT 
-            diet_id AS dietId,
-            user_id AS userId,
-            meal_type,
-            calories,
-            protein,
-            carbs
-        FROM diet
-        WHERE user_id = (SELECT user_id FROM "user" WHERE user_email = #{userEmail})
-        ORDER BY created_at DESC
-    </select>
-
-    <!-- 수면 데이터 조회 -->
-    <select id="getSleep" resultType="com.mysite.web.health.dto.SleepRequestDTO">
-        SELECT 
-            sleep_id AS sleepId,
-            user_id AS userId,
-            sleep_start AS sleepStart,
-            sleep_end AS sleepEnd,
-            sleep_quality AS sleepQuality
-        FROM sleep
-        WHERE user_id = (SELECT user_id FROM "user" WHERE user_email = #{userEmail})
-        ORDER BY created_at DESC
-    </select>
-
-    <!-- 건강 지표 조회 -->
-    <select id="getMetrics" resultType="com.mysite.web.health.dto.HealthMetricsRequestDTO">
-        SELECT 
-            metric_id AS metricId,
-            user_id AS userId,
-            weight,
-            target_weight AS targetWeight,
-            bmi
-        FROM health_metrics
-        WHERE user_id = (SELECT user_id FROM "user" WHERE user_email = #{userEmail})
-        ORDER BY created_at DESC
-    </select>
+	<!-- 운동 데이터 조회 -->
+	<select id="getExercise" parameterType="com.mysite.web.health.model.ExerciseEntity" resultType="com.mysite.web.health.dto.ExerciseResponseDTO">
+	    SELECT
+	        exercise_id AS exerciseId,
+	        user_id AS userId,
+	        facility_id AS facilityId,
+	        exercise_type AS exerciseType,
+	        duration,
+	        calories_burned AS caloriesBurned
+	    FROM exercise
+	    WHERE user_id = #{userId}
+	    <if test="createdAt != null">
+	        AND DATE(created_at) = TO_DATE(#{createdAt}, 'YYYY-MM-DD')
+	    </if>
+	    ORDER BY created_at DESC
+	</select>
+	
+	<!-- 식단 데이터 조회 -->
+	<select id="getDiet" parameterType="com.mysite.web.health.model.DietEntity" resultType="com.mysite.web.health.dto.DietResponseDTO">
+	    SELECT
+	        diet_id AS dietId,
+	        user_id AS userId,
+	        meal_type,
+	        calories,
+	        protein,
+	        carbs
+	    FROM diet
+	    WHERE user_id = #{userId}
+	    <if test="createdAt != null">
+	        AND DATE(created_at) = TO_DATE(#{createdAt}, 'YYYY-MM-DD')
+	    </if>
+	    ORDER BY created_at DESC
+	</select>
+	
+	<!-- 수면 데이터 조회 -->
+	<select id="getSleep" parameterType="com.mysite.web.health.model.SleepEntity" resultType="com.mysite.web.health.dto.SleepResponseDTO">
+	    SELECT
+	        sleep_id AS sleepId,
+	        user_id AS userId,
+	        sleep_start AS sleepStart,
+	        sleep_end AS sleepEnd,
+	        sleep_quality AS sleepQuality
+	    FROM sleep
+	    WHERE user_id = #{userId}
+	    <if test="createdAt != null">
+	        AND DATE(created_at) = TO_DATE(#{createdAt}, 'YYYY-MM-DD')
+	    </if>
+	    ORDER BY created_at DESC
+	</select>
+	
+	<!-- 건강 지표 조회 -->
+	<select id="getMetrics" parameterType="com.mysite.web.health.model.HealthMetricsEntity" resultType="com.mysite.web.health.dto.HealthMetricsResponseDTO">
+	    SELECT
+	        metric_id AS metricId,
+	        user_id AS userId,
+	        weight,
+	        target_weight AS targetWeight,
+	        bmi
+	    FROM health_metrics
+	    WHERE user_id = #{userId}
+	    <if test="createdAt != null">
+	        AND DATE(created_at) = TO_DATE(#{createdAt}, 'YYYY-MM-DD')
+	    </if>
+	    ORDER BY created_at DESC
+	</select>
 
 </mapper>
