@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mysite.web.finance.mapper.TransactionMapper">
+
+    <select id="getTransactions" parameterType="map" resultType="com.mysite.web.finance.dto.TransactionResponseDTO">
+	    SELECT *
+	    FROM transaction
+	    WHERE user_id = #{entity.userId}
+	    <if test="startDate != null and endDate != null">
+	        AND date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+	    </if>
+	    <if test="entity.type != null and entity.type != 'all'">
+	        AND type = #{entity.type}
+	    </if>
+	    <if test="entity.category != null and entity.category != 'all'">
+	        AND category = #{entity.category}
+	    </if>
+	    <if test="entity.description != null and entity.description != ''">
+	        AND description ILIKE '%' || #{entity.description} || '%'
+	    </if>
+	    ORDER BY ${sortField} ${sortDirection}
+	    LIMIT #{pageSize} OFFSET #{offset}
+	</select>
+	
+	<select id="getTransactionTotalCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM transaction
+	    WHERE user_id = #{entity.userId}
+	    <if test="startDate != null and endDate != null">
+	        AND date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+	    </if>
+	    <if test="entity.type != null and entity.type != 'all'">
+	        AND type = #{entity.type}
+	    </if>
+	    <if test="entity.category != null and entity.category != 'all'">
+	        AND category = #{entity.category}
+	    </if>
+	    <if test="entity.description != null and entity.description != ''">
+	        AND description ILIKE '%' || #{entity.description} || '%'
+	    </if>
+	</select>
+	
+
+
+    <insert id="addTransaction" parameterType="com.mysite.web.finance.model.TransactionEntity">
+        INSERT INTO transaction (user_id, date, category, type, amount, description, is_income)
+        VALUES (#{userId}, #{date}, #{category}, #{type}, #{amount}, #{description}, #{isIncome})
+    </insert>
+    
+    
+    <delete id="deleteTransaction" parameterType="com.mysite.web.finance.model.TransactionEntity">
+	    DELETE FROM "transaction"
+	    WHERE transaction_id = #{transactionId} 
+	    AND user_id = #{userId}
+	</delete>
+    
+    
+    
+    
+    
+    
+    
+    
+</mapper>
