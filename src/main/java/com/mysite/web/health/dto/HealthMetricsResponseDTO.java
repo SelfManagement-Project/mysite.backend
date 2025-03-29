@@ -15,4 +15,5 @@ public class HealthMetricsResponseDTO {
     private double bmi;
     private String createdAt;
     private String updatedAt;
+    private double height;
 }

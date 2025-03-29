@@ -22,4 +22,6 @@ public class HealthMetricsEntity {
 
     private String createdAt;
     private String updatedAt;
+    
+    private double height;
 }

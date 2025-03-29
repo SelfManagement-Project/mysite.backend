@@ -10,7 +10,8 @@
 	        facility_id AS facilityId,
 	        exercise_type AS exerciseType,
 	        duration,
-	        calories_burned AS caloriesBurned
+	        calories_burned AS caloriesBurned,
+	        created_at AS createdAt
 	    FROM exercise
 	    WHERE user_id = #{userId}
 	    <if test="createdAt != null">
@@ -27,7 +28,8 @@
 	        meal_type,
 	        calories,
 	        protein,
-	        carbs
+	        carbs,
+	        created_at AS createdAt
 	    FROM diet
 	    WHERE user_id = #{userId}
 	    <if test="createdAt != null">
@@ -59,7 +61,8 @@
 	        user_id AS userId,
 	        weight,
 	        target_weight AS targetWeight,
-	        bmi
+	        bmi,
+	        height
 	    FROM health_metrics
 	    WHERE user_id = #{userId}
 	    <if test="createdAt != null">

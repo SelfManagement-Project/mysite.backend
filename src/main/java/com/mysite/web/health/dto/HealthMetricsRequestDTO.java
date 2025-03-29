@@ -12,4 +12,5 @@ public class HealthMetricsRequestDTO {
     private double weight;
     private double targetWeight;
     private double bmi;
+    private double height;
 }
