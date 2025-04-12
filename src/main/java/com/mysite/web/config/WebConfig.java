@@ -20,7 +20,13 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**") // 경로
 				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-				.allowedOrigins("http://localhost:5173", "http://localhost:8000")
+				.allowedOrigins(
+						"http://localhost:5173", 
+						"http://localhost:8000,",
+						"http://10.0.2.2:9000",        // ✅ Android 에뮬레이터용 추가
+				        "http://192.168.0.10:9000",      // ✅ 실제 기기에서 접속할 때 PC의 IP도 미리 추가해줘도 좋음
+						"http://192.168.219.178:9000"
+						)
 				.allowedHeaders("*") // 모든 요청해더
 				.exposedHeaders("Authorization")// 노출시킬 헤더
 				.allowCredentials(true); // 쿠키허용

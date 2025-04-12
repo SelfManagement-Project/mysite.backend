@@ -56,7 +56,7 @@ public class LoginController {
 	// 로그인
 	@PostMapping("/login")
 	public ResponseEntity<JsonResult> login(@RequestBody LoginRequestDTO loginRequest) {
-//    	System.out.println("login test::" + loginRequest);
+    	System.out.println("login test::" + loginRequest);
 		LoginResponseDTO auth = loginService.login(loginRequest);
 		System.out.println("토큰확인::::" + auth);
 		return ResponseEntity.ok(JsonResult.success(auth));

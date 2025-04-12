@@ -41,7 +41,14 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8000"));
+        configuration.setAllowedOrigins(Arrays.asList(
+        		"http://localhost:5173", 
+        		"http://localhost:8000",
+        		"http://10.0.2.2:9000",        // ✅ Android 에뮬레이터용 추가
+                "http://192.168.0.10:9000",      // ✅ 실제 기기에서 접속할 때 PC의 IP도 미리 추가해줘도 좋음
+                "http://192.168.226.180:9000",	// 내핸드폰 ip
+        		"http://192.168.219.178:9000"
+        		));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
