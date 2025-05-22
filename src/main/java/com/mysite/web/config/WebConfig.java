@@ -27,10 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
 				        "http://192.168.0.10:9000",      // ✅ 실제 기기에서 접속할 때 PC의 IP도 미리 추가해줘도 좋음
 				        "http://192.168.226.180:9000",	// 내핸드폰 ip
 						"http://192.168.219.178:9000",
-						"http://192.168.0.13:9000",
-						"http://192.168.219.141:9000",
-						"http://192.168.219.96:9000",
-						"http://192.168.219.225:9000"
+						"http://192.168.0.6:9000"
 						)
 				.allowedHeaders("*") // 모든 요청해더
 				.exposedHeaders("Authorization")// 노출시킬 헤더
